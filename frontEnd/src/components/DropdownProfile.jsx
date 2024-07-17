@@ -1,6 +1,7 @@
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
+import img from '../assets/images.png'
 
 export default function DropdownProfile({ handleLogout, author }) {
     const navigate = useNavigate()
@@ -20,7 +21,11 @@ export default function DropdownProfile({ handleLogout, author }) {
             {({ open }) => (
                 <>
                     <MenuButton className='rounded-full w-12'>
-                        <img className='rounded-full border-2 border-verde' src={author.avatar} alt={author.nome} />
+                        {author.avatar ? (
+                            <img className='rounded-full border-2 border-verde' src={author.avatar} alt={author.nome} />
+                        ) : (
+                            <img className='rounded-full border-2 border-verde' src={img} alt={author.nome} />
+                        )}
                     </MenuButton>  
                     <AnimatePresence>
                         {open && ( 

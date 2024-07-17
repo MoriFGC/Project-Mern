@@ -6,7 +6,7 @@ import { getAuthorEmail } from "../services/Api";
 
 export default function Navbar() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [author, setAuthor] = useState(null);
+  const [author, setAuthor] = useState([]);
   const [userData, setUserData] = useState(null);
   const navigate = useNavigate();
 
@@ -55,11 +55,16 @@ export default function Navbar() {
     navigate("/login");
   };
 
+  useEffect(() => {
+    console.log(author);
+  }, [author])
+
+  console.log(userData);
   return (
     <nav className="flex justify-between items-center px-[10%] py-5 h-[100px] bg-black">
       <div>
         <Link to="/">
-          <img className="w-[150px] text-black" src={logo} alt="Strive logo" />
+          <img className="md:w-[150px] text-black" src={logo} alt="Strive logo" />
         </Link>
       </div>
       {isLoggedIn ? (
@@ -67,7 +72,7 @@ export default function Navbar() {
           {author && <DropdownProfile handleLogout={handleLogout} author={author}/>}
           <div>
             <Link to="/create">
-              <button className="text-black bg-verde border-2 border-solid border-verde text-[20px] font-bold hover:text-white hover:bg-black rounded-lg p-[10px] px-4 font-mono">
+              <button className="text-black bg-verde border-2 border-solid border-verde text-[20px] font-bold hover:text-white hover:bg-black rounded-lg p-[5px] md:p-[10px] md:px-4 font-mono">
                 + New Post
               </button>
             </Link>

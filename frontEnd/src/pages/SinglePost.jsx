@@ -16,7 +16,22 @@ export default function post() {
     const [showDeleteModal, setShowDeleteModal] = useState(false)
     const navigate = useNavigate()
     const [author, setAuthor] = useState([]);
+    const [userData, setUserData] = useState(null);
     //-------------------- fetch e use effect
+
+    useEffect(() => {
+        const checkLoginStatus = () => {
+          const storedUserData = JSON.parse(localStorage.getItem("userData"));
+          setUserData(storedUserData);
+        };
+    
+        checkLoginStatus();
+        window.addEventListener("storage", checkLoginStatus);
+    
+        return () => {
+          window.removeEventListener("storage", checkLoginStatus);
+        };
+      }, []);
 
     useEffect(() => {
         fetchPost();
@@ -92,6 +107,7 @@ export default function post() {
                     <p className='text-black font-mono p-3'>{post.content}.</p>
                 </div>
             </div>
+            {userData.email === post.author && (
                 <div className='flex justify-center gap-3 mt-8'>
                     <button onClick={() => setEditPost(post)}
                         className="text-white bg-verde border-2 border-solid border-verde hover:text-white  hover:bg-black rounded-full p-2">
@@ -102,6 +118,7 @@ export default function post() {
                         <TrashIcon className='w-[30px]'/>
                     </button>
                 </div>
+            )}
           </div> 
             
             <DeleteCheck 

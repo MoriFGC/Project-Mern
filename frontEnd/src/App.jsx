@@ -8,31 +8,21 @@ import CreatePost from './pages/CreatePost'
 import SingleAuthor from './pages/SingleAuthor'
 import Register from './pages/Register'
 import Login from './pages/Login'
-import { useState, useEffect } from 'react'
+import Page404 from './pages/Page404'
 
 function App() {
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-  });
-
-  useEffect(() => {
-    const storedUserData = JSON.parse(localStorage.getItem("userData"));
-    if (storedUserData) {
-      setFormData(storedUserData);
-    }
-  }, []);
 
   return (
     <Router>
         <Navbar />
         <Routes>
           <Route path='/register' element={<Register />} />
-          <Route path='/login' element={<Login formData={formData} setFormData={setFormData}/>} />
+          <Route path='/login' element={<Login />} />
           <Route path='/' element={<Home />} />
           <Route path='/create' element={<CreatePost />} />
           <Route path='/post/:id' element={<SinglePost />} />
           <Route path='/author/:id' element={<SingleAuthor />} />
+          <Route path='*' element={<Page404 />} />
         </Routes>
         <Footer />
     </Router>

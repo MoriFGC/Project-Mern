@@ -85,7 +85,7 @@ export default function Home() {
                     placeholder='Search Post...'
                     value={searchTitle}
                     onChange={(e) => setSearchTitle(e.target.value)}
-                    className='border-2 rounded-2xl focus:outline-none focus:ring-2 focus:ring-verde focus:border-transparent'
+                    className='border-2 rounded-2xl focus:outline-none focus:ring-2 focus:ring-verde focus:border-transparent bg-gray-800 text-white'
                 />
             </div>
 
