@@ -55,11 +55,6 @@ export default function Navbar() {
     navigate("/login");
   };
 
-  useEffect(() => {
-    console.log(author);
-  }, [author])
-
-  console.log(userData);
   return (
     <nav className="flex justify-between items-center px-[10%] py-5 h-[100px] bg-black">
       <div>

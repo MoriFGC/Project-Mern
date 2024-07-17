@@ -160,4 +160,95 @@ router.patch("/:blogPostId/cover", cloudinaryUploader.single("cover"), async (re
   }
 });
 
+//----------------------- Comments routes -----------------------
+
+router.get("/:id/comments", async (req, res) => {
+    try {
+      const post = await BlogPosts.findById(req.params.id);
+      if (!post) {
+        return res.status(404).json({ message: "Post non trovato" });
+      }
+      res.json(post.comments);
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  });
+
+  //GET /blogPosts/:id/comments/:commentId => ritorna un commento specifico di un post specifico
+
+  router.get("/:id/comments/:commentId", async (req, res) => {
+    try {
+      const post = await BlogPosts.findById(req.params.id);
+      if (!post) {
+        return res.status(404).json({ message: "Post non trovato" });
+      }
+      const comment = post.comments.id(req.params.commentId);
+      if (!comment) {
+        return res.status(404).json({ message: "Commento non trovato" });
+      }
+      res.json(comment);
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  });
+
+  //POST /blogPosts/:id/comments => aggiungi un nuovo commento ad un post specifico
+
+  router.post("/:id/comments", async (req, res) => {
+    try {
+      const post = await BlogPosts.findById(req.params.id);
+      if (!post) {
+        return res.status(404).json({ message: "Post non trovato" });
+      }
+      const newComment = {
+        name: req.body.name,
+        email: req.body.email,
+        content: req.body.content
+      };
+      post.comments.push(newComment);
+      await post.save();
+      res.status(201).json(newComment);
+    } catch (error) {
+      res.status(400).json({ message: error.message });
+    }
+  });
+  // PUT /blogPosts/:id/comments/:commentId => cambia un commento di un post specifico
+  router.put("/:id/comments/:commentId", async (req, res) => {
+    try {
+      const post = await BlogPosts.findById(req.params.id);
+      if (!post) {
+        return res.status(404).json({ message: "Post non trovato" });
+      }
+      const comment = post.comments.id(req.params.commentId);
+      if (!comment) {
+        return res.status(404).json({ message: "Commento non trovato" });
+      }
+      comment.content = req.body.content;
+      await post.save();
+      res.json(comment);
+    } catch (error) {
+      res.status(400).json({ message: error.message });
+    }
+  });
+  // DELETE /blogPosts/:id/comments/:commentId => elimina un commento specifico da un post specifico
+  router.delete("/:id/comments/:commentId", async (req, res) => {
+    try {
+      const post = await BlogPosts.findById(req.params.id);
+      if (!post) {
+        return res.status(404).json({ message: "Post non trovato" });
+      }
+      
+      // Usa il metodo pull per rimuovere il commento dall'array
+      post.comments.pull({ _id: req.params.commentId });
+      
+      // Salva il post aggiornato
+      await post.save();
+      
+      res.json({ message: "Commento eliminato con successo" });
+    } catch (error) {
+      console.error("Errore durante l'eliminazione del commento:", error);
+      res.status(500).json({ message: error.message });
+    }
+  });
+  
 export default router;

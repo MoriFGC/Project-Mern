@@ -31,6 +31,7 @@ export default function CreatePost() {
       try {
         const userData = await getMe();
         setPost((prevPost) => ({ ...prevPost, author: userData.email }));
+        console.log(userData);
       } catch (error) {
         console.error("Errore nel recupero dei dati utente:", error);
         navigate("/login");

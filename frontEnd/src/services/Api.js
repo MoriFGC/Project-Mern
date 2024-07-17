@@ -21,6 +21,7 @@ api.interceptors.request.use(
   }
 );
 
+//--------------------- FETCH POSTS ---------------------
 export const getPosts = ( currentPage, limit, title = '') => api.get('/blogPosts', {
   params: {
     page: currentPage,
@@ -38,8 +39,7 @@ export const createPost = (postData) => api.post("/blogPosts", postData, {
 export const updatePost = (postData, id) => api.put(`/blogPosts/${id}`, postData);
 export const deletePost = (id) => api.delete(`/blogPosts/${id}`);
 
-// Se poi aggiungiamo operazioni sugli autori le mettiamo qua sotto
-
+//--------------------- FETCH AUTHORS ---------------------
 export const getAuthors = (currentPage, limit) => api.get('/authors', {
   params: {
     page: currentPage,
@@ -56,6 +56,39 @@ export const createAuthor = (postData) => api.post("/authors", postData, {
 export const updateAuthor = (postData, id) => api.put(`/authors/${id}`, postData);
 export const deleteAuthor = (id) => api.delete(`/authors/${id}`);
 //-------------------------------------------------------------------------------
+
+//--------------------- FETCH COMMENTS ---------------------
+
+// Recupera tutti i commenti per un post specifico
+export const getComments = (postId) =>
+  api.get(`/blogPosts/${postId}/comments`).then((response) => response.data);
+
+// Aggiunge un nuovo commento a un post specifico
+export const addComment = (postId, commentData) =>
+  api
+    .post(`/blogPosts/${postId}/comments`, commentData)
+    .then((response) => response.data);
+
+// Funzione per recuperare un commento specifico
+export const getComment = (postId, commentId) =>
+  api
+    .get(`/blogPosts/${postId}/comments/${commentId}`)
+    .then((response) => response.data);
+
+// Funzione per aggiornare un commento specifico
+export const updateComment = (postId, commentId, commentData) =>
+  api
+    .put(`/blogPosts/${postId}/comments/${commentId}`, commentData)
+    .then((response) => response.data);
+
+// Funzione per eliminare un commento specifico
+export const deleteComment = (postId, commentId) =>
+  api
+    .delete(`/blogPosts/${postId}/comments/${commentId}`)
+    .then((response) => response.data);
+
+
+//----------------------------------------------------------
 
 // NEW! Funzione per registrare un nuovo utente
 export const registerUser = (userData) => api.post("/authors", userData);

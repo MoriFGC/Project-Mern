@@ -1,5 +1,18 @@
 import mongoose from "mongoose";
 
+// AGGIUNGO LO SCHEMA PER I COMMENTI!
+const commentSchema = new mongoose.Schema(
+  {
+    name: { type: String, required: true },
+    email: { type: String, required: true },
+    content: { type: String, required: true },
+  },
+  {
+    timestamps: true,
+    _id: true // Mi assicuro che ogni commento abbia un proprio _id univoco
+  },
+);
+
 const blogPostSchema = new mongoose.Schema({
     category: { type: String, required: true },
     title: { type: String, required: true },
@@ -9,7 +22,8 @@ const blogPostSchema = new mongoose.Schema({
       unit: { type: String, required: true }
     },
     author: { type: String, required: true }, // email dell'autore
-    content: { type: String, required: true }
+    content: { type: String, required: true },
+    comments: [commentSchema] // NEW: Aggiungo l'array di commenti EMBEDDED.
   }, {
     timestamps: true,
     collection: "blogPosts"
