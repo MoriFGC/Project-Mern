@@ -2,7 +2,7 @@ import { Link, useParams } from "react-router-dom";
 import { getAuthorId, getPostAuthor } from "../services/Api";
 import { useEffect, useState } from "react";
 import Post from "../components/Post";
-import img from '../assets/images.png'
+import img from '../assets/user.svg'
 import gif from '../assets/404.gif';
 
 export default function SingleAuthor() {

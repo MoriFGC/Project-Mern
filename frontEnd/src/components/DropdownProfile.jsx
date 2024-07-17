@@ -1,7 +1,7 @@
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
-import img from '../assets/images.png'
+import img from '../assets/user.svg'
 
 export default function DropdownProfile({ handleLogout, author }) {
     const navigate = useNavigate()
