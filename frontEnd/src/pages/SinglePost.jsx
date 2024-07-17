@@ -6,6 +6,8 @@ import {
   getComments,
   addComment,
   getMe,
+  deleteComment,
+  updateComment,
 } from "../services/Api";
 import { deletePost, updatePost } from "../services/Api";
 import { DeleteCheck } from "../components/DeleteCheck";
@@ -13,51 +15,30 @@ import { UpdateModalPost } from "../components/UpdateModalPost";
 import PencilIcon from "@heroicons/react/24/solid/PencilIcon";
 import TrashIcon from "@heroicons/react/24/solid/TrashIcon";
 
-export default function post() {
-  //----------------------------------- use state per i post
+export default function Post() {
   const { id } = useParams();
   const [post, setPost] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [editPost, setEditPost] = useState({});
+  const [editingCommentId, setEditingCommentId] = useState(null);
+  const [editCommentContent, setEditCommentContent] = useState('');
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const navigate = useNavigate();
-  const [author, setAuthor] = useState([]);
+  const [author, setAuthor] = useState({});
   const [userData, setUserData] = useState(null);
-  // Stato per memorizzare i commenti
   const [comments, setComments] = useState([]);
-  // Stato per il nuovo commento
   const [newComment, setNewComment] = useState("");
-  //-------------------- use effects -----------------------
 
-  // useEffect per l'autenticazione
   useEffect(() => {
     const fetchUserData = async () => {
       try {
         const userData = await getMe();
         setUserData(userData);
-        console.log("User data:", userData);
       } catch (error) {
         console.error("Errore nel recupero dei dati utente:", error);
       }
     };
     fetchUserData();
-  }, []);
-
-  useEffect(() => {
-    const checkLoginStatus = () => {
-      const storedUserData = JSON.parse(localStorage.getItem("userData"));
-      setUserData(storedUserData);
-    };
-
-    checkLoginStatus();
-    window.addEventListener("storage", checkLoginStatus);
-
-    return () => {
-      window.removeEventListener("storage", checkLoginStatus);
-    };
-  }, []);
-
-  useEffect(() => {
     fetchPostAndComments();
   }, [id]);
 
@@ -66,18 +47,13 @@ export default function post() {
       fetchAuthor();
     }
   }, [post]);
-  //--------------------- fetch autore, post e commenti ---------------------
+
   const fetchPostAndComments = async () => {
     try {
-      const response = await getPost(id);
-      setPost(response.data);
-
-      // NEW: Fetch dei commenti
+      const postResponse = await getPost(id);
+      setPost(postResponse.data);
       const commentsResponse = await getComments(id);
       setComments(commentsResponse);
-      commentsResponse.forEach((comment) =>
-        console.log("Comment ID:", comment._id)
-      );
     } catch (err) {
       console.error("Errore nella richiesta del post o dei commenti", err);
     }
@@ -87,18 +63,15 @@ export default function post() {
     try {
       const response = await getAuthorEmail(post.author);
       setAuthor(response.data);
-      console.log(author);
     } catch (error) {
       console.error("Errore nella richiesta dell'autore", error);
     }
   };
 
-  // Gestore per i cambiamenti nei campi del nuovo commento
   const handleCommentChange = (e) => {
     setNewComment(e.target.value);
   };
 
-  // Gestore per l'invio di un nuovo commento
   const handleCommentSubmit = async (e) => {
     e.preventDefault();
     if (!userData) {
@@ -120,9 +93,36 @@ export default function post() {
     }
   };
 
-  if (!post) return <div>Caricamento...</div>;
-  //------------------------------------------------- DELETE
-  // funzione per eliminare il post
+  const handleCommentDelete = async (commentId) => {
+    try {
+      await deleteComment(id, commentId);
+      setComments((prevComments) =>
+        prevComments.filter((comment) => comment._id !== commentId)
+      );
+    } catch (error) {
+      console.error("Errore nell'eliminazione del commento:", error);
+      alert("Errore nell'eliminazione del commento. Riprova.");
+    }
+  };
+
+  const handleCommentUpdate = async (e) => {
+    e.preventDefault();
+    try {
+      await updateComment(id, editingCommentId, { content: editCommentContent });
+      setComments((prevComments) =>
+        prevComments.map((comment) =>
+          comment._id === editingCommentId
+            ? { ...comment, content: editCommentContent }
+            : comment
+        )
+      );
+      setEditingCommentId(null);
+      setEditCommentContent('');
+    } catch (error) {
+      console.error("Errore nell'aggiornamento del commento:", error);
+    }
+  };
+
   const handleDelete = async () => {
     try {
       await deletePost(id);
@@ -132,7 +132,6 @@ export default function post() {
     }
   };
 
-  // funzione per far partire la modale di conferma eliminazione
   const deleteCheck = () => {
     setShowDeleteModal(true);
   };
@@ -140,22 +139,23 @@ export default function post() {
   const closeDeleteModal = () => {
     setShowDeleteModal(false);
   };
-  //----------------------------------------------------- UPDATE
+
   const handleUpdate = async (e) => {
-    e.preventDefault;
+    e.preventDefault();
     try {
       await updatePost(editPost, id);
-      setPost(post._id === id ? editPost : post);
+      setPost(prevPost => ({ ...prevPost, ...editPost }));
       setIsEditing(false);
     } catch (error) {
       console.error("Error with the update function", error);
     }
   };
 
+  if (!post) return <div>Caricamento...</div>;
+
   return (
     <div className="mx-auto md:mt-[50px] min-h-screen flex flex-col items-start mt-10 md:grid md:grid-cols-3 text-white">
       <div className="hidden md:block"></div>
-      {/* Post e cover */}
       <div className="flex flex-col items-center">
         <img
           className="rounded-[20px] w-full mx-auto"
@@ -170,13 +170,11 @@ export default function post() {
             <p className="text-black font-mono p-3">{post.content}.</p>
           </div>
         </div>
-        {/* FINE POST E COVER */}
-        {/* Se l'email dell'utente loggato è uguale all'email dell'autore del post, mostra i pulsanti per modificare e eliminare il post */}
-        {userData.email === post.author && (
+        {userData?.email === post.author && (
           <div className="flex justify-center gap-3 mt-8">
             <button
               onClick={() => setEditPost(post)}
-              className="text-white bg-verde border-2 border-solid border-verde hover:text-white  hover:bg-black rounded-full p-2"
+              className="text-white bg-verde border-2 border-solid border-verde hover:text-white hover:bg-black rounded-full p-2"
             >
               <PencilIcon className="w-[30px]" />
             </button>
@@ -188,10 +186,7 @@ export default function post() {
             </button>
           </div>
         )}
-        {/* Se l'email dell'utente loggato è uguale all'email dell'autore del post, mostra i pulsanti per modificare e eliminare il post */}
-        {/* INIZIO SEZIONE COMMENTI */}
-        <div className=" w-full">
-          {/* FORM COMMENTO */}
+        <div className="w-full">
           <form
             className="flex flex-col items-center gap-3 p-3 text-black"
             onSubmit={handleCommentSubmit}
@@ -211,25 +206,74 @@ export default function post() {
               Invia Commento
             </button>
           </form>
-          {/* FINE FORM COMMENTO */}
-          {/* SEZIONE COMMENTI */}
           <div className="flex flex-col items-center gap-3 p-3 text-black">
             <h2 className="text-4xl font-semibold font-mono text-white">
               Comments
             </h2>
             {comments.length > 0 ? (
               comments.map((comment) => (
-                <div key={comment._id} className="text-white border-2 border-solid border-verde rounded-lg p-3 w-full flex flex-col gap-2">
-                  <h3 className="text-2xl font-semibold font-mono text-verde">{comment.name}</h3>
-                  <h4 className="text-lg font-mono">{comment.email}</h4>
-                  <p className="text-lg font-mono">{comment.content}</p>
+                <div
+                  key={comment._id}
+                  className="text-white border-2 border-solid border-verde rounded-lg p-3 w-full"
+                >
+                  <div className="flex flex-col gap-2">
+                    <h3 className="text-2xl font-semibold font-mono text-verde">
+                      {comment.name}
+                    </h3>
+                    <h4 className="text-lg font-mono">{comment.email}</h4>
+                    {editingCommentId === comment._id ? (
+                      <form onSubmit={handleCommentUpdate}>
+                        <textarea
+                          value={editCommentContent}
+                          onChange={(e) => setEditCommentContent(e.target.value)}
+                          className="w-full p-2 text-black"
+                        />
+                        <button
+                          type="submit"
+                          className="bg-verde text-white p-2 mt-2 rounded"
+                        >
+                          Salva
+                        </button>
+                        <button
+                          onClick={() => {
+                            setEditingCommentId(null);
+                            setEditCommentContent('');
+                          }}
+                          className="bg-gray-500 text-white p-2 mt-2 ml-2 rounded"
+                        >
+                          Annulla
+                        </button>
+                      </form>
+                    ) : (
+                      <p className="text-lg font-mono">{comment.content}</p>
+                    )}
+                  </div>
+                  {(userData?.email === comment.email ||
+                    userData?.email === post.author) && (
+                    <div className="flex justify-between gap-2 mt-2">
+                      <button
+                        onClick={() => {
+                          setEditingCommentId(comment._id);
+                          setEditCommentContent(comment.content);
+                        }}
+                        className="bg-verde border-2 w-full flex justify-center border-solid border-verde hover:text-white hover:bg-black rounded-full p-2"
+                      >
+                        <PencilIcon className="w-[30px]" />
+                      </button>
+                      <button
+                        onClick={() => handleCommentDelete(comment._id)}
+                        className="bg-[#ff0101] border-2 w-full flex justify-center border-solid border-[#ff0101] hover:text-white hover:bg-black rounded-full p-2"
+                      >
+                        <TrashIcon className="w-[30px]" />
+                      </button>
+                    </div>
+                  )}
                 </div>
               ))
             ) : (
-              <p className="text-white text-2xl">No comments yet</p>
+              <p className="text-white">No comments yet.</p>
             )}
           </div>
-          {/* FINE SEZIONE COMMENTI */}
         </div>
       </div>
 
@@ -247,7 +291,6 @@ export default function post() {
           handleUpdate={handleUpdate}
         />
       )}
-      {/* IMG Autore e email */}
       <Link
         to={`/author/${author._id}`}
         className="flex flex-col items-center gap-3 text-white hover:text-verde mt-10 md:mt-0 hover:drop-shadow-2xl hover:scale-[1.02] transition duration-300 ease-in-out"
