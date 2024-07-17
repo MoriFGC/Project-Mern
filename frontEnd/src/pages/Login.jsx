@@ -52,10 +52,12 @@ export default function Login() {
     const params = new URLSearchParams(location.search);
     const token = params.get("token");
     const userDataParam = params.get("userData");
-    if (token && userDataParam) {
+    if (token) {
       localStorage.setItem("token", token);
-      const userData = JSON.parse(decodeURIComponent(userDataParam));
-      localStorage.setItem("userData", JSON.stringify(userData));
+      if (userDataParam) {
+        const userData = JSON.parse(decodeURIComponent(userDataParam));
+        localStorage.setItem("userData", JSON.stringify(userData));
+      }
       window.dispatchEvent(new Event("storage"));
       setIsLoggedIn(true);
       navigate("/");
@@ -92,6 +94,11 @@ export default function Login() {
   const handleGoogleLogin = () => {
     // Reindirizziamo l'utente all'endpoint del backend che inizia il processo di autenticazione Google
     window.location.href = "http://localhost:5001/api/auth/google";
+  };
+
+  const handleGithubLogin = () => {
+    // Reindirizziamo l'utente all'endpoint del backend che inizia il processo di autenticazione GitHub
+    window.location.href = "http://localhost:5001/api/auth/github";
   };
 
     // Se l'utente è già loggato, reindirizza alla home page
@@ -137,7 +144,7 @@ export default function Login() {
             Login with Google
           </button>
           <button 
-            onClick={handleGoogleLogin} 
+            onClick={handleGithubLogin} 
             className="w-full bg-black text-verde border border-verde text-xl font-mono font-semibold py-2 rounded hover:bg-green-700 transition duration-300">
             Login with Github
           </button>

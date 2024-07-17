@@ -38,7 +38,11 @@ router.get(
         nome: req.user.nome,
         cognome: req.user.cognome,
       };
-      res.redirect(`http://localhost:5173/login?token=${token}&userData=${encodeURIComponent(JSON.stringify(userData))}`);
+      res.redirect(
+        `http://localhost:5173/login?token=${token}&userData=${encodeURIComponent(
+          JSON.stringify(userData)
+        )}`
+      );
     } catch (error) {
       // Se c'è un errore nella generazione del token, lo logghiamo
       console.error("Errore nella generazione del token:", error);
@@ -90,5 +94,33 @@ router.get("/me", authMiddleware, (req, res) => {
   // Invia i dati dell'autore come risposta
   res.json(authorData);
 });
+// rotta pper iniziare il processo di autenticazione GitHub
+router.get(
+  "/github",
+  passport.authenticate("github", { scope: ["user:email"] })
+);
+
+router.get(
+  "/github/callback",
+  passport.authenticate("github", { failureRedirect: "/login" }),
+  async (req, res) => {
+    try {
+      const token = await generateJWT({ id: req.user._id });
+      const userData = {
+        email: req.user.email,
+        nome: req.user.nome,
+        cognome: req.user.cognome,
+      };
+      res.redirect(
+        `http://localhost:5173/login?token=${token}&userData=${encodeURIComponent(
+          JSON.stringify(userData)
+        )}`
+      );
+    } catch (error) {
+      console.error("Errore nella generazione del token:", error);
+      res.redirect("/login?error=auth_failed");
+    }
+  }
+);
 
 export default router;

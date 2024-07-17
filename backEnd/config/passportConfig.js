@@ -1,6 +1,7 @@
 // Importiamo le dipendenze necessarie
 import passport from "passport";
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
+import { Strategy as GithubStrategy } from "passport-github2";
 import Authors from "../models/Authors.js";
 
 // Configuriamo la strategia di autenticazione Google
@@ -39,6 +40,60 @@ passport.use(
       } catch (error) {
         // Se si verifica un errore, lo passiamo a Passport
         done(error, null);
+      }
+    }
+  )
+);
+
+//configuriamo la strategy di aut di github
+passport.use(
+  new GithubStrategy(
+    {
+      clientID: process.env.GITHUB_CLIENT_ID,
+      clientSecret: process.env.GITHUB_CLIENT_SECRET,
+      callbackURL: "/api/auth/github/callback",
+    },
+    async (accessToken, refreshToken, profile, done) => {
+      try {
+        let author = await Authors.findOne({ githubId: profile.id });
+        if (!author) {
+          const [nome, ...cognomeParts] = (
+            profile.displayName ||
+            profile.username ||
+            "GithubUser"
+          ).split(" ");
+          const cognome = cognomeParts.join(" ");
+
+          // gestiamo la email
+          let email;
+          if (profile.emails && profile.emails.length > 0) {
+            email = profile.emails.find((e) => e.primary || e.verified)?.value;
+            if (!email) email = profile.emails[0].value;
+          }
+
+          if (!email) {
+            email = `${profile.id}@github.example.com`;
+            console.log(
+              `email non disponibile per ${
+                profile.displayName || profile.username
+              } - usiamo email di fallback`
+            );
+          }
+
+          // creare un autore
+          author = new Authors({
+            githubId: profile.id,
+            nome: nome || "GitHub User",
+            cognome: cognome,
+            email: email,
+          });
+
+          await author.save();
+        }
+
+        done(null, author);
+      } catch (err) {
+        done(err, null);
       }
     }
   )
