@@ -17,18 +17,19 @@ import TrashIcon from "@heroicons/react/24/solid/TrashIcon";
 
 export default function Post() {
   const { id } = useParams();
-  const [post, setPost] = useState(null);
-  const [isEditing, setIsEditing] = useState(false);
+  const [post, setPost] = useState(null); //post
+  const [isEditing, setIsEditing] = useState(false); 
   const [editPost, setEditPost] = useState({});
   const [editingCommentId, setEditingCommentId] = useState(null);
   const [editCommentContent, setEditCommentContent] = useState('');
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const navigate = useNavigate();
   const [author, setAuthor] = useState({});
   const [userData, setUserData] = useState(null);
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState("");
 
+  const navigate = useNavigate();
+//--------------------------------------- fetch user data -----------------------------
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -47,7 +48,7 @@ export default function Post() {
       fetchAuthor();
     }
   }, [post]);
-
+//------------------------ fetch post, commenti e autori ----------------------
   const fetchPostAndComments = async () => {
     try {
       const postResponse = await getPost(id);
@@ -67,7 +68,7 @@ export default function Post() {
       console.error("Errore nella richiesta dell'autore", error);
     }
   };
-
+//-------------- delete, post e update dei commenti -----------------------
   const handleCommentChange = (e) => {
     setNewComment(e.target.value);
   };
@@ -122,7 +123,7 @@ export default function Post() {
       console.error("Errore nell'aggiornamento del commento:", error);
     }
   };
-
+//--------------------------------------- delete e update dei post --------------------------
   const handleDelete = async () => {
     try {
       await deletePost(id);
@@ -154,7 +155,7 @@ export default function Post() {
   if (!post) return <div>Caricamento...</div>;
 
   return (
-    <div className="mx-auto md:mt-[50px] min-h-screen flex flex-col items-start mt-10 md:grid md:grid-cols-3 text-white">
+    <div className="mx-auto min-h-screen flex flex-col items-start mt-40 md:grid md:grid-cols-3 text-white">
       <div className="hidden md:block"></div>
       <div className="flex flex-col items-center">
         <img

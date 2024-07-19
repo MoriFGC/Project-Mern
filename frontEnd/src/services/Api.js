@@ -22,10 +22,9 @@ api.interceptors.request.use(
 );
 
 //--------------------- FETCH POSTS ---------------------
-export const getPosts = ( currentPage, limit, title = '') => api.get('/blogPosts', {
+export const getPosts = ( currentPage, title = '') => api.get('/blogPosts', {
   params: {
     page: currentPage,
-    limit: limit,
     title: title
   }
 });

@@ -1,6 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import logo from "../assets/strive_logo_color.svg";
+import logoDark from "../assets/logoDark.svg";
+import logoWhite from "../assets/logoWhite.svg";
 import DropdownProfile from "./DropdownProfile";
 import { getAuthorEmail } from "../services/Api";
 
@@ -9,6 +10,7 @@ export default function Navbar() {
   const [author, setAuthor] = useState([]);
   const [userData, setUserData] = useState(null);
   const navigate = useNavigate();
+
 
   useEffect(() => {
     const checkLoginStatus = () => {
@@ -56,10 +58,10 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="flex justify-between items-center px-[10%] py-5 h-[100px] bg-black">
+    <nav className="flex justify-between items-center px-10 py-5 h-[100px] bg-black border-b border-white/75 fixed top-0 w-full z-50">
       <div>
         <Link to="/">
-          <img className="md:w-[150px] text-black" src={logo} alt="Strive logo" />
+          <img className="md:w-[150px]" src={logoDark} alt="Strive logo" />
         </Link>
       </div>
       {isLoggedIn ? (

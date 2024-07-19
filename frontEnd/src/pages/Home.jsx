@@ -7,7 +7,6 @@ import Pagination from '../components/Pagination';
 export default function Home() {
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
-    const [limit, setLimit] = useState(10);
     const [posts, setPosts] = useState([]);
     const [searchTitle, setSearchTitle] = useState('');
     const [isLoading, setIsLoading] = useState(true);
@@ -36,7 +35,7 @@ export default function Home() {
     const fetchPosts = async () => {
         try {
             setIsLoading(true);
-            const response = await getPosts(currentPage, limit, searchTitle);
+            const response = await getPosts(currentPage, searchTitle);
             setPosts(response.data.posts);
             setTotalPages(response.data.totalPages);
         } catch(err) {
@@ -67,7 +66,7 @@ export default function Home() {
 
     useEffect(() => {
         fetchPosts();
-    }, [currentPage, limit, searchTitle]);
+    }, [currentPage, searchTitle]);
 
     if (!isLoggedIn) {
         navigate("/login");
@@ -75,10 +74,10 @@ export default function Home() {
     }
 
     return (
-        <main className='px-12 mt-[30px] mb-5 min-h-screen'>
+        <main className='px-12 mb-32 mt-40 min-h-screen max-w-7xl mx-auto relative'>
             <div className='flex flex-col md:flex-row justify-between'>
                 <h1 className='text-[30px] font-bold font-mono text-white'>
-                    Welcome To My Blog, {author ? `${author.nome} ${author.cognome}` : 'User'}
+                    Welcome To My Blog, <span className='text-verde'>{author ? `${author.nome} ${author.cognome}` : 'User'}</span>
                 </h1>
                 <input 
                     type="search" 
@@ -94,8 +93,6 @@ export default function Home() {
                 currentPage={currentPage} 
                 setCurrentPage={setCurrentPage} 
                 totalPages={totalPages} 
-                setLimit={setLimit} 
-                limit={limit}
             />
         </main>
     )
