@@ -36,7 +36,7 @@ export default function DropdownProfile({ handleLogout, author }) {
                                 animate={{ opacity: 1, scale: 1 }}
                                 exit={{ opacity: 0, scale: 0.95 }}
                                 anchor="bottom"
-                                className="origin-top bg-[#222831] text-white rounded-lg shadow-lg w-36 p-4 mt-2 flex flex-col"
+                                className="origin-top bg-white dark:bg-[#222831] text-black dark:text-white rounded-lg shadow-lg w-36 p-4 mt-8 flex flex-col"
                             >
                                 {dropdownItems.map((item, index) => (
                                     <MenuItem 

@@ -5,7 +5,7 @@ import logoWhite from "../assets/logoWhite.svg";
 import DropdownProfile from "./DropdownProfile";
 import { getAuthorEmail } from "../services/Api";
 
-export default function Navbar() {
+export default function Navbar({ darkMode }) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [author, setAuthor] = useState([]);
   const [userData, setUserData] = useState(null);
@@ -58,10 +58,10 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="flex justify-between items-center px-10 py-5 h-[100px] bg-black border-b border-white/75 fixed top-0 w-full z-50">
+    <nav className="flex justify-between items-center px-10 py-5 h-[100px] text-black dark:text-white bg-white dark:bg-black fixed top-0 w-full z-50 transition-colors duration-300">
       <div>
         <Link to="/">
-          <img className="md:w-[150px]" src={logoDark} alt="Strive logo" />
+        <img className="md:w-[150px]" src={darkMode ? logoDark : logoWhite} alt="Strive logo" />
         </Link>
       </div>
       {isLoggedIn ? (
@@ -69,7 +69,7 @@ export default function Navbar() {
           {author && <DropdownProfile handleLogout={handleLogout} author={author}/>}
           <div>
             <Link to="/create">
-              <button className="text-black bg-verde border-2 border-solid border-verde text-[20px] font-bold hover:text-white hover:bg-black rounded-lg p-[5px] md:p-[10px] md:px-4 font-mono">
+              <button className=" border-2 border-solid border-transparent text-xl font-bold hover:border-verde rounded-lg p-[5px] md:p-[10px] md:px-4 font-mono transition-all duration-300 ease-in-out">
                 + New Post
               </button>
             </Link>

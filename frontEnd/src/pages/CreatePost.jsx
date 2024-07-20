@@ -190,7 +190,7 @@ export default function CreatePost() {
           </div>
           <button
             type="submit"
-            className="w-full bg-verde text-white py-2 rounded hover:bg-green-700 transition duration-300"
+            className="w-full bg-verde text-black font-mono font-bold py-2 rounded hover:bg-green-700 transition duration-300"
           >
             Create Post
           </button>

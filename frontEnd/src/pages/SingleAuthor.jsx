@@ -40,7 +40,7 @@ export default function SingleAuthor() {
   };
 
   return (
-    <div className="flex flex-col items-center min-h-screen mb-10 text-white">
+    <div className="flex flex-col items-center min-h-screen mb-10 text-white max-w-7xl mx-auto mt-40">
       <div className="drop-shadow-2xl  mx-auto flex flex-col justify-center items-center gap-4 text-center text-white rounded-full my-5">
         <div className="border-2 border-verde h-[200px] w-[200px] rounded-full ms-4">
           {author.avatar ? (
@@ -71,7 +71,7 @@ export default function SingleAuthor() {
         <div className="flex flex-col items-center justify-center mt-10">
             <img src={gif} alt='404' className='w-full max-w-[300px] sm:max-w-[400px] md:max-w-[500px] lg:max-w-[600px] xl:max-w-[700px] mb-8'/>
           <p className="text-xl font-mono">No posts yet</p>
-          {author.email && <Link to="/create" className="text-black bg-verde border-2 border-solid border-verde text-[20px] font-bold hover:text-white hover:bg-black rounded-lg p-[5px] md:p-[10px] md:px-4 font-mono mt-5"><button >Create your first post</button></Link>}
+          {author.email && <Link to="/create" className="border-2 border-solid border-transparent text-xl font-bold text-white bg-white/10 hover:bg-white/30 hover:border-verde rounded-xl p-[5px] md:p-[10px] md:px-4 font-mono mt-5 transition-all duration-300 ease-in-out"><button>+ Create your first post</button></Link>}
         </div>
       )}
     </div>

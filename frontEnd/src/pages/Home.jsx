@@ -76,7 +76,7 @@ export default function Home() {
     return (
         <main className='px-12 mb-32 mt-40 min-h-screen max-w-7xl mx-auto relative'>
             <div className='flex flex-col md:flex-row justify-between'>
-                <h1 className='text-[30px] font-bold font-mono text-white'>
+                <h1 className='text-[30px] font-bold font-mono text-black dark:text-white'>
                     Welcome To My Blog, <span className='text-verde'>{author ? `${author.nome} ${author.cognome}` : 'User'}</span>
                 </h1>
                 <input 
@@ -84,7 +84,7 @@ export default function Home() {
                     placeholder='Search Post...'
                     value={searchTitle}
                     onChange={(e) => setSearchTitle(e.target.value)}
-                    className='border-2 rounded-2xl focus:outline-none focus:ring-2 focus:ring-verde focus:border-transparent bg-gray-800 text-white'
+                    className='border-2 rounded-2xl focus:outline-none focus:ring-2 focus:ring-verde focus:border-transparent bg-white dark:bg-gray-800 text-black dark:text-white'
                 />
             </div>
 

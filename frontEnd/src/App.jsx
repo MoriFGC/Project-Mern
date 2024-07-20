@@ -9,14 +9,29 @@ import SingleAuthor from './pages/SingleAuthor'
 import Register from './pages/Register'
 import Login from './pages/Login'
 import Page404 from './pages/Page404'
-
+import { Flowbite } from 'flowbite-react'
+import { useState, useEffect } from 'react'
 
 function App() {
+  const [darkMode, setDarkMode] = useState(() => localStorage.getItem('darkMode') === 'true');
+
+  useEffect(() => {
+    localStorage.setItem('darkMode', darkMode);
+    if (darkMode) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [darkMode]);
+
+  const toggleDarkMode = () => setDarkMode(prev => !prev);
+
 
   return (
-      <Router >
-        <Navbar />
-        <Routes >
+    <Flowbite theme={{ dark: darkMode }}>
+      <Router>
+        <Navbar darkMode={darkMode} />
+        <Routes>
           <Route path='/register' element={<Register />} />
           <Route path='/login' element={<Login />} />
           <Route path='/' element={<Home />} />
@@ -25,8 +40,9 @@ function App() {
           <Route path='/author/:id' element={<SingleAuthor />} />
           <Route path='*' element={<Page404 />} />
         </Routes>
-        <Footer />
+        <Footer darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
       </Router>
+    </Flowbite>
   )
 }
 

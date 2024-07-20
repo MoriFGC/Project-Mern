@@ -7,10 +7,12 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
     flowbite.content()
   ],
+  darkMode: 'class', // Aggiungi questa riga
   theme: {
     extend: {
       colors: {
-        verde: '#01FF84'
+        verde: '#01FF84',
+        footer: '#0A0A0A'
       },
     },
   },
