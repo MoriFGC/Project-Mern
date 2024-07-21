@@ -37,6 +37,7 @@ router.get(
 );
 
 router.post("/login", async (req, res) => {
+  console.log("Received login request:", req.body);
   try {
     const { email, password } = req.body;
     console.log("Login attempt for email:", email);
