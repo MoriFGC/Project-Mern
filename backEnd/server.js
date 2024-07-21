@@ -4,7 +4,7 @@ import dotenv from 'dotenv';
 import endpoints from 'express-list-endpoints';
 import cors from 'cors';
 import blogPostRoutes from './routes/blogPostRoutes.js'
-import authorRoutes from './routes/authorsRoutes.js';
+import authorRoutes from './routes/authRoutes.js'
 import path from 'path';
 import { fileURLToPath } from 'url';
 import authRoutes from "./routes/authRoutes.js"; // Rotte per l'autenticazione
