@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import logoDark from "../assets/logoDark.svg";
 import logoWhite from "../assets/logoWhite.svg";
 import DropdownProfile from "./DropdownProfile";
-import { getAuthorEmail } from "../services/Api";
+import { getAuthorEmail, getUserData } from "../services/Api";
 
 export default function Navbar({ darkMode }) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -27,6 +27,44 @@ export default function Navbar({ darkMode }) {
       window.removeEventListener("storage", checkLoginStatus);
     };
   }, []);
+
+
+
+
+  // useEffect(() => {
+  //   // NEW! Approccio migliore - Controlla se esiste un token nel localStorage
+  //   const checkLoginStatus = async () => {
+  //     const token = localStorage.getItem("token");
+  //     if (token) {
+  //       try {
+  //         await getUserData();
+  //         setIsLoggedIn(true);
+  //       } catch (error) {
+  //         console.error("Token non valido:", error);
+  //         localStorage.removeItem("token");
+  //         setIsLoggedIn(false);
+  //       }
+  //     } else {
+  //       setIsLoggedIn(false);
+  //     }
+  //   };
+
+  //   // Controlla lo stato di login all'avvio
+  //   checkLoginStatus();
+
+  //   // Aggiungi un event listener per controllare lo stato di login
+  //   window.addEventListener("storage", checkLoginStatus);
+  //   // NEW! Evento per il cambio di stato
+  //   window.addEventListener("loginStateChange", checkLoginStatus);
+
+  //   // NEW! Rimuovi l'event listener quando il componente viene smontato e quando cambia
+  //   return () => {
+  //     window.removeEventListener("storage", checkLoginStatus);
+  //     window.removeEventListener("loginStateChange", checkLoginStatus);
+  //   };
+  // }, []);
+
+
 //---------------------------------------- fecth per prendere l'autore
   useEffect(() => {
     const fetchAuthor = async () => {

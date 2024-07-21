@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:5001/api';
+const API_URL = 'https://project-mern-3pf8.onrender.com';
 const api = axios.create({baseURL: API_URL});
 
 // NEW! Aggiungi un interceptor per includere il token in tutte le richieste

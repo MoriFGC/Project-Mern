@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react"; // Importa il hook useState da React per gestire lo stato
 import { Link, useNavigate, useLocation } from "react-router-dom"; // Importa useNavigate da react-router-dom per navigare programmaticamente
 import { loginUser } from "../services/Api.js"; // Importa la funzione API per effettuare il login
+// Importa l'URL dell'API dalla variabile d'ambiente
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5001/api";
 
 export default function Login() {
 
@@ -91,14 +93,14 @@ export default function Login() {
   };
 
   // Funzione per gestire il login con Google
+  // Funzione aggiornata per gestire il login con Google
   const handleGoogleLogin = () => {
-    // Reindirizziamo l'utente all'endpoint del backend che inizia il processo di autenticazione Google
-    window.location.href = "http://localhost:5001/api/auth/google";
+    window.location.href = `${API_URL}/api/auth/google`;
   };
 
-  const handleGithubLogin = () => {
-    // Reindirizziamo l'utente all'endpoint del backend che inizia il processo di autenticazione GitHub
-    window.location.href = "http://localhost:5001/api/auth/github";
+  // Funzione aggiornata per gestire il login con GitHub
+  const handleGitHubLogin = () => {
+    window.location.href = `${API_URL}/api/auth/github`;
   };
 
     // Se l'utente è già loggato, reindirizza alla home page
@@ -144,7 +146,7 @@ export default function Login() {
             Login with Google
           </button>
           <button 
-            onClick={handleGithubLogin} 
+            onClick={handleGitHubLogin} 
             className="w-full  text-verde border border-verde text-xl font-mono font-semibold py-2 rounded hover:bg-green-700 transition duration-300">
             Login with Github
           </button>
