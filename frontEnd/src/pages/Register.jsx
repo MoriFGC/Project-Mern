@@ -21,95 +21,108 @@ export default function Register() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // Gestore per la sottomissione del form
   const handleSubmit = async (e) => {
-    e.preventDefault(); // Previene il comportamento predefinito del form di ricaricare la pagina
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append('nome', formData.firstName);
+    formData.append('cognome', formData.lastName);
+    formData.append('email', formData.email);
+    formData.append('password', formData.password);
+    formData.append('dataDiNascita', formData.dateOfBirth);
+    if (formData.avatar) {
+      formData.append('avatar', formData.avatar);
+    }
+    
     try {
-      await registerUser(formData); // Chiama la funzione registerUser con i dati del form
-      alert("Registrazione avvenuta con successo!"); // Mostra un messaggio di successo
-      navigate("/login"); // Naviga alla pagina di login dopo la registrazione
+      await registerUser(formData);
+      alert("Registrazione avvenuta con successo!");
+      navigate("/login");
     } catch (error) {
-      console.error("Errore durante la registrazione:", error); // Logga l'errore in console
-      alert("Errore durante la registrazione. Riprova."); // Mostra un messaggio di errore
+      console.error("Errore durante la registrazione:", error);
+      if (error.response && error.response.data) {
+        alert(`Errore: ${error.response.data.message}`);
+      } else {
+        alert("Errore durante la registrazione. Riprova.");
+      }
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center mt-20">
-      <div className="p-6 bg-transparent rounded-lg shadow-md text-black dark:text-white">
-      <h2 className="text-2xl font-bold font-mono text-center mb-7">Registration</h2>
-      <form onSubmit={handleSubmit} className="flex flex-col gap-7">
-        <div className="flex gap-2">
-          <div className="flex flex-col">
-            <label htmlFor="firstName">First Name</label>
-            <input className="px-4 py-2 rounded bg-white dark:bg-gray-800 text-black dark:text-white border border-gray-700 focus:outline-none focus:border-green-500"
-              type="text"
-              id="firstName"
-              name="firstName"
-              onChange={handleChange}
-              required
-            />
+    <div className="min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8 mt-36">
+      <div className="w-full max-w-md p-6 bg-transparent rounded-lg shadow-md text-black dark:text-white">
+        <h2 className="text-2xl font-bold font-mono text-center mb-7">Registration</h2>
+        <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+          <div className="flex flex-col sm:flex-row gap-4">
+            <div className="flex flex-col flex-1">
+              <label htmlFor="firstName">First Name</label>
+              <input className="px-4 py-2 rounded bg-white dark:bg-gray-800 text-black dark:text-white border border-gray-700 focus:outline-none focus:border-green-500"
+                type="text"
+                id="firstName"
+                name="firstName"
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <div className="flex flex-col flex-1">
+              <label htmlFor="lastName">Last Name</label>
+              <input className="px-4 py-2 rounded bg-white dark:bg-gray-800 text-black dark:text-white border border-gray-700 focus:outline-none focus:border-green-500" 
+                type="text"
+                id="lastName"
+                name="lastName"
+                onChange={handleChange}
+                required
+              />
+            </div>
           </div>
-          <div className="flex flex-col">
-            <label htmlFor="lastName">Last Name</label>
-            <input className="px-4 py-2 rounded bg-white dark:bg-gray-800 text-black dark:text-white border border-gray-700 focus:outline-none focus:border-green-500" 
-              type="text"
-              id="lastName"
-              name="lastName"
-              onChange={handleChange}
-              required
-            />
+          <div className="flex flex-col sm:flex-row gap-4">
+            <div className="flex flex-col flex-1">
+              <label htmlFor="email">Email</label>
+              <input className="px-4 py-2 rounded bg-white dark:bg-gray-800 text-black dark:text-white border border-gray-700 focus:outline-none focus:border-green-500"
+                type="email"
+                id="email"
+                name="email"
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <div className="flex flex-col flex-1">
+              <label htmlFor="password">Password</label>
+              <input className="px-4 py-2 rounded bg-white dark:bg-gray-800 text-black dark:text-white border border-gray-700 focus:outline-none focus:border-green-500"
+                type="password"
+                id="password"
+                name="password"
+                onChange={handleChange}
+                required
+              />
+            </div>
           </div>
-        </div>
-        <div className="flex gap-2">
-          <div className="flex flex-col">
-            <label htmlFor="email">Email</label>
-            <input className="px-4 py-2 rounded bg-white dark:bg-gray-800 text-black dark:text-white border border-gray-700 focus:outline-none focus:border-green-500"
-              type="email"
-              id="email"
-              name="email"
-              onChange={handleChange}
-              required
-            />
+          <div className="flex flex-col gap-4">
+            <div className="flex flex-col">
+              <label htmlFor="dateOfBirth">Date of Birth</label>
+              <input className="px-4 py-2 rounded bg-white dark:bg-gray-800 text-black dark:text-white border border-gray-700 focus:outline-none focus:border-green-500"
+                type="date"
+                id="dateOfBirth"
+                name="dateOfBirth"
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <div className="flex flex-col">
+              <label htmlFor="avatar">Choose Profile Picture</label>
+              <input className="px-4 py-2 rounded bg-white dark:bg-gray-800 text-black dark:text-white border border-gray-700 focus:outline-none focus:border-green-500"
+                type="file"
+                id="avatar"
+                name="avatar"
+                onChange={handleChange}
+                required
+              />
+            </div>
           </div>
-          <div className="flex flex-col">
-            <label htmlFor="password">Password</label>
-            <input className="px-4 py-2 rounded bg-white dark:bg-gray-800 text-black dark:text-white border border-gray-700 focus:outline-none focus:border-green-500"
-              type="password"
-              id="password"
-              name="password"
-              onChange={handleChange}
-              required
-            />
-          </div>
-        </div>
-        <div className="flex flex-col gap-2">
-          <div className="flex flex-col">
-            <label htmlFor="dateOfBirth">Date of Birth</label>
-            <input className="px-4 py-2 rounded bg-white dark:bg-gray-800 text-black dark:text-white border border-gray-700 focus:outline-none focus:border-green-500"
-              type="date"
-              id="dateOfBirth"
-              name="dateOfBirth"
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div className="flex flex-col">
-            <label htmlFor="avatar">Choose Profile Picture</label>
-            <input className="px-4 py-2 rounded bg-white dark:bg-gray-800 text-black dark:text-white border border-gray-700 focus:outline-none focus:border-green-500"
-              type="file"
-              id="avatar"
-              name="avatar"
-              onChange={handleChange}
-              required
-            />
-          </div>
-        </div>
-        <button type="submit" className="bg-verde text-white dark:text-black px-4 py-2 rounded-md hover:bg-green-700">Register</button>
-      </form>
-      <p className="text-center text-gray-500 mt-5">
-        Already have an account? <Link to="/login" className="text-verde hover:text-green-700">Login</Link>
-      </p>
+          <button type="submit" className="bg-verde text-white dark:text-black px-4 py-2 rounded-md hover:bg-green-700 mt-4">Register</button>
+        </form>
+        <p className="text-center text-gray-500 mt-5">
+          Already have an account? <Link to="/login" className="text-verde hover:text-green-700">Login</Link>
+        </p>
       </div>
     </div>
   );
