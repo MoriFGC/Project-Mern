@@ -1,2 +1,2 @@
-2.fai il put del profilo
-3.fai un readme
+fai il put del profilo
+fai un readme

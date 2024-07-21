@@ -8,7 +8,7 @@ export default function Pagination({
   totalPages,
 }) {
   return (
-    <div className="flex justify-center gap-4 items-center text-black dark:text-white font-semibold text-2xl absolute -bottom-24 w-full">
+    <div className="flex justify-center gap-4 items-center text-black dark:text-white font-semibold text-2xl absolute left-1/2 transform -translate-x-1/2 -bottom-24 w-full">
       <button
         className="text-black dark:text-white border-2 border-solid border-transparent hover:border-verde text-2xl font-bold rounded-full p-3 px-4 font-mono transition-all duration-300 ease-in-out"
         onClick={() => setCurrentPage(currentPage - 1)}

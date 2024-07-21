@@ -4,6 +4,9 @@ import { useEffect, useState } from "react";
 import Post from "../components/Post";
 import img from '../assets/user.svg'
 import gif from '../assets/404.gif';
+"use client";
+
+import { Spinner } from "flowbite-react";
 
 export default function SingleAuthor() {
   const [author, setAuthor] = useState(null);
@@ -32,10 +35,10 @@ export default function SingleAuthor() {
     fetchData();
   }, [id]);
 
-  if (loading) {
-    return <div className="text-center mt-52 min-h-screen">Loading...</div>;
-  }
-
+  if (loading) return <div className="mt-52 min-h-screen flex flex-col items-center justify-center gap-5 text-2xl">
+    <Spinner color="success" aria-label="Success spinner example" className="w-20 h-20"/>
+    Loading...
+    </div>;
   if (!author) {
     return <div className="text-center mt-52 min-h-screen">Author not found</div>;
   }

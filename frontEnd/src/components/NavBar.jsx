@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import logoDark from "../assets/logoDark.svg";
 import logoWhite from "../assets/logoWhite.svg";
 import DropdownProfile from "./DropdownProfile";
-import { getAuthorEmail, getUserData } from "../services/Api";
+import { getAuthorEmail, getMe, getUserData } from "../services/Api";
 
 export default function Navbar({ darkMode }) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -38,6 +38,8 @@ export default function Navbar({ darkMode }) {
   //     if (token) {
   //       try {
   //         await getUserData();
+  //         // const response = await getMe()
+  //         // console.log(response)
   //         setIsLoggedIn(true);
   //       } catch (error) {
   //         console.error("Token non valido:", error);

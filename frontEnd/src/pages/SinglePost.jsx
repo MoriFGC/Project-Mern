@@ -22,6 +22,9 @@ import {
 } from "@headlessui/react";
 import { EllipsisVerticalIcon } from "@heroicons/react/24/solid";
 import userImg from '../assets/user.svg'
+"use client";
+
+import { Spinner } from "flowbite-react";
 
 export default function Post() {
   const { id } = useParams();
@@ -175,19 +178,22 @@ export default function Post() {
     }));
   };
 
-  if (!post) return <div className="text-center mt-52 min-h-screen">Loading...</div>;
+  if (!post) return <div className="mt-52 min-h-screen flex flex-col items-center justify-center gap-5 text-2xl">
+    <Spinner color="success" aria-label="Success spinner example" className="w-20 h-20"/>
+    Loading...
+    </div>;
 
   return (
     <div className="mx-auto min-h-screen flex flex-col items-start mt-40 md:grid md:grid-cols-3 text-black dark:text-white">
       <div className="hidden md:block"></div>
       {/* inizio post */}
-      <div className="flex flex-col items-center relative">
+      <div className="flex flex-col items-center relative w-full">
         <img
           className="rounded-[20px] w-full mx-auto"
           src={post.cover}
           alt={post.title}
         />
-        <div className="w-[70%] flex flex-col items-center">
+        <div className="w-full flex flex-col items-center">
           <h1 className="text-center text-3xl mt-5 mb-2 font-mono">
             {post.title}
           </h1>
@@ -198,10 +204,10 @@ export default function Post() {
         {/* fine post */}
         {/* ----------------------------- bottone per editare e delete ---------------------------- */}
         {userData?.email === post.author && (
-          <Menu as="div" className="absolute right-2 -top-10">
+          <Menu as="div" className="absolute right-2 top-7 ">
             <MenuButton>
               <EllipsisVerticalIcon
-                className="w-7 h-7 border-2 border-transparent rounded-full hover:border-verde/50 transition duration-300 ease-in-out"
+                className="w-8 h-8 border-2 border-transparent rounded-full hover:border-verde/50 transition duration-300 ease-in-out"
                 aria-hidden="true"
               />
             </MenuButton>
@@ -265,7 +271,7 @@ export default function Post() {
             ></textarea>
             <button
               type="submit"
-              className="border-2 border-solid border-transparent hover:border-verde text-black dark:text-white  p-2 w-full transition duration-300 ease-in-out rounded-lg"
+              className="border border-solid border-black/70 dark:border-white/70 hover:bg-verde/50 text-black dark:text-white  p-2 w-full transition duration-300 ease-in-out rounded-lg"
             >
               Send Comment
             </button>
@@ -437,15 +443,15 @@ export default function Post() {
       )}
       <Link
         to={`/author/${author._id}`}
-        className="flex flex-col items-center gap-3 text-black dark:text-white hover:text-verde mb-20 mt-10 md:mt-0 hover:drop-shadow-2xl hover:scale-[1.02] transition duration-300 ease-in-out"
+        className="flex flex-col items-center gap-3 text-black dark:text-white mb-20 mt-10 md:mt-0 hover:drop-shadow-2xl hover:scale-[1.02] transition duration-300 ease-in-out hover:text-verde group"
       >
-        <h2 className="text-2xl font-semibold font-mono">Author</h2>
+        <h2 className="text-2xl font-semibold font-mono group-hover:text-verde">Author</h2>
         <img
-          className="rounded-full w-[30%]"
+          className="rounded-full w-[30%] group-hover:text-verde"
           src={author.avatar}
           alt={author.nome}
         />
-        <h3 className="text-[20px] font-semibold font-mono">
+        <h3 className="text-xl font-semibold font-mono group-hover:text-verde">
           {author.nome} {author.cognome}
         </h3>
       </Link>

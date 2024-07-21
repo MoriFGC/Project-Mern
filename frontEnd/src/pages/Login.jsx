@@ -119,7 +119,7 @@ export default function Login() {
               Login with Github
             </button>
           </form>
-          <p className="text-black dark:text-white text-center mt-8">Don't have an account? <Link to="/register" className="text-verde hover:text-white underline">Sign up</Link></p> 
+          <p className="text-black dark:text-white text-center mt-8">Don't have an account? <Link to="/register" className="text-verde hover:text-black dark:hover:text-white underline">Sign up</Link></p> 
         </div>
       </div>
     </div>
