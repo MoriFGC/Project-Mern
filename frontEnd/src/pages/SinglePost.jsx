@@ -21,6 +21,7 @@ import {
   Transition,
 } from "@headlessui/react";
 import { EllipsisVerticalIcon } from "@heroicons/react/24/solid";
+import userImg from '../assets/user.svg'
 
 export default function Post() {
   const { id } = useParams();
@@ -283,7 +284,7 @@ export default function Post() {
                     <div className="flex justify-between items-center">
                       <div className="flex items-center gap-2 ">
                         <img
-                          src={comment.avatar}
+                          src={comment.avatar || userImg}
                           alt={comment.name}
                           className="w-10 h-10 rounded-full"
                         />

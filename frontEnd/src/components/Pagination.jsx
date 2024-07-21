@@ -6,8 +6,6 @@ export default function Pagination({
   currentPage,
   setCurrentPage,
   totalPages,
-  setLimit,
-  limit,
 }) {
   return (
     <div className="flex justify-center gap-4 items-center text-black dark:text-white font-semibold text-2xl absolute -bottom-24 w-full">

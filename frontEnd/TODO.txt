@@ -1,4 +1,2 @@
-1. fai la versione light 
 2.fai il put del profilo
 3.fai un readme
-4.migliora l'interfaccia del sito
