@@ -7,7 +7,7 @@ import passport from "../config/passportConfig.js"; //  Importiamo passport
 const router = express.Router();
 
 // Definisci l'URL del frontend usando una variabile d'ambiente
-const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:5173';
+const FRONTEND_URL = process.env.FRONTEND_URL;
 
 // Rotta per iniziare il processo di autenticazione Google
 router.get(
@@ -58,30 +58,25 @@ router.get(
 // POST /login => restituisce token di accesso
 router.post("/login", async (req, res) => {
   try {
-    // Estrae email e password dal corpo della richiesta
     const { email, password } = req.body;
-
-    // Cerca l'autore nel database usando l'email
+    console.log("Login attempt for email:", email);
+    
     const author = await Authors.findOne({ email });
     if (!author) {
-      // Se l'autore non viene trovato, restituisce un errore 401
+      console.log("Author not found for email:", email);
       return res.status(401).json({ message: "Credenziali non valide" });
     }
 
-    // Verifica la password usando il metodo comparePassword definito nel modello Author
     const isMatch = await author.comparePassword(password);
     if (!isMatch) {
-      // Se la password non corrisponde, restituisce un errore 401
+      console.log("Password mismatch for email:", email);
       return res.status(401).json({ message: "Credenziali non valide" });
     }
 
-    // Se le credenziali sono corrette, genera un token JWT
     const token = await generateJWT({ id: author._id });
-
-    // Restituisce il token e un messaggio di successo
+    console.log("Login successful for email:", email);
     res.json({ token, message: "Login effettuato con successo" });
   } catch (error) {
-    // Gestisce eventuali errori del server
     console.error("Errore nel login:", error);
     res.status(500).json({ message: "Errore del server" });
   }
@@ -90,18 +85,13 @@ router.post("/login", async (req, res) => {
 // GET /me => restituisce l'autore collegato al token di accesso
 // authMiddleware verifica il token e aggiunge i dati dell'autore a req.author
 router.get("/me", authMiddleware, (req, res) => {
-  // Converte il documento Mongoose in un oggetto JavaScript semplice
+  if (!req.author) {
+    return res.status(401).json({ message: "Utente non autenticato" });
+  }
   const authorData = req.author.toObject();
-  // Rimuove il campo password per sicurezza
   delete authorData.password;
-  // Invia i dati dell'autore come risposta
   res.json(authorData);
 });
-// rotta pper iniziare il processo di autenticazione GitHub
-router.get(
-  "/github",
-  passport.authenticate("github", { scope: ["user:email"] })
-);
 
 router.get(
   "/github/callback",
