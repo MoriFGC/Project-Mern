@@ -23,8 +23,7 @@ router.get(
 );
 
 // Rotta di callback per l'autenticazione Google
-router.get(
-  "/google/callback",
+router.get("/api/auth/google/callback", 
   (req, res, next) => {
     console.log("Ricevuta callback da Google");
     next();
