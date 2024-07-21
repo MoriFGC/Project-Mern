@@ -65,11 +65,11 @@ export default function Login() {
   };
 
   const handleGoogleLogin = () => {
-    window.location.href = `${API_URL}/api/auth/google/callback`;
+    window.location.href = `${API_URL}/api/auth/google`;
   };
   
   const handleGitHubLogin = () => {
-    window.location.href = `${API_URL}/api/auth/github/callback`;
+    window.location.href = `${API_URL}/api/auth/github`;
   };
 
   if (isLoggedIn) {
