@@ -36,7 +36,7 @@ export default function Post() {
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState("");
   const [expandedComments, setExpandedComments] = useState({});
-
+  const [isLoading, setIsLoading] = useState(true);
   //console.log(userData);
 
   const navigate = useNavigate();
@@ -52,6 +52,7 @@ export default function Post() {
     };
     fetchUserData();
     fetchPostAndComments();
+    setIsLoading(false);
   }, [id]);
 
   useEffect(() => {
@@ -174,7 +175,7 @@ export default function Post() {
     }));
   };
 
-  if (!post) return <div>Caricamento...</div>;
+  if (!post) return <div className="text-center mt-52 min-h-screen">Loading...</div>;
 
   return (
     <div className="mx-auto min-h-screen flex flex-col items-start mt-40 md:grid md:grid-cols-3 text-black dark:text-white">

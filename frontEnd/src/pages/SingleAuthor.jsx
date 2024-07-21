@@ -6,38 +6,39 @@ import img from '../assets/user.svg'
 import gif from '../assets/404.gif';
 
 export default function SingleAuthor() {
-  const [author, setAuthor] = useState([]);
-  const [posts, setposts] = useState([]);
+  const [author, setAuthor] = useState(null);
+  const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
   const { id } = useParams();
 
   useEffect(() => {
-    fetchAuthor();
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const authorResponse = await getAuthorId(id);
+        setAuthor(authorResponse.data);
+        
+        if (authorResponse.data && authorResponse.data.email) {
+          const postsResponse = await getPostAuthor(authorResponse.data.email);
+          setPosts(postsResponse.data);
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
   }, [id]);
 
-  useEffect(() => {
-    if (author) {
-      fetchPosts();
-    }
-  }, [author]);
+  if (loading) {
+    return <div className="text-center mt-52 min-h-screen">Loading...</div>;
+  }
 
-  const fetchPosts = async () => {
-    try {
-      const response = await getPostAuthor(author.email);
-      setposts(response.data);
-      console.log(posts);
-    } catch (error) {
-      console.error("no post", error);
-    }
-  };
-
-  const fetchAuthor = async () => {
-    try {
-      const response = await getAuthorId(id);
-      setAuthor(response.data);
-    } catch (error) {
-      console.error("no utente", error);
-    }
-  };
+  if (!author) {
+    return <div className="text-center mt-52 min-h-screen">Author not found</div>;
+  }
 
   return (
     <div className="flex flex-col items-center min-h-screen mb-10 text-black dark:text-white max-w-7xl mx-auto mt-40">
