@@ -6,6 +6,9 @@ import passport from "../config/passportConfig.js"; //  Importiamo passport
 
 const router = express.Router();
 
+// Definisci l'URL del frontend usando una variabile d'ambiente
+const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:5173';
+
 // Rotta per iniziare il processo di autenticazione Google
 router.get(
   "/google",
@@ -19,7 +22,7 @@ router.get(
 router.get(
   "/google/callback",
   // Passport tenta di autenticare l'utente con le credenziali Google
-  passport.authenticate("google", { failureRedirect: "/login" }),
+  passport.authenticate('google', { failureRedirect: `${FRONTEND_URL}/login` }),
   // Se l'autenticazione fallisce, l'utente viene reindirizzato alla pagina di login
 
   async (req, res) => {
@@ -39,7 +42,7 @@ router.get(
         cognome: req.user.cognome,
       };
       res.redirect(
-        `http://localhost:5173/login?token=${token}&userData=${encodeURIComponent(
+        `${FRONTEND_URL}/login?token=${token}&userData=${encodeURIComponent(
           JSON.stringify(userData)
         )}`
       );
@@ -47,7 +50,7 @@ router.get(
       // Se c'è un errore nella generazione del token, lo logghiamo
       console.error("Errore nella generazione del token:", error);
       // E reindirizziamo l'utente alla pagina di login con un messaggio di errore
-      res.redirect("/login?error=auth_failed");
+      res.redirect(`${FRONTEND_URL}/login?error=auth_failed`);
     }
   }
 );
@@ -102,7 +105,7 @@ router.get(
 
 router.get(
   "/github/callback",
-  passport.authenticate("github", { failureRedirect: "/login" }),
+  passport.authenticate('github', { failureRedirect: `${FRONTEND_URL}/login` }),
   async (req, res) => {
     try {
       const token = await generateJWT({ id: req.user._id });
@@ -112,15 +115,33 @@ router.get(
         cognome: req.user.cognome,
       };
       res.redirect(
-        `http://localhost:5173/login?token=${token}&userData=${encodeURIComponent(
+        `${FRONTEND_URL}/login?token=${token}&userData=${encodeURIComponent(
           JSON.stringify(userData)
         )}`
       );
     } catch (error) {
       console.error("Errore nella generazione del token:", error);
-      res.redirect("/login?error=auth_failed");
+      res.redirect(`${FRONTEND_URL}/login?error=auth_failed`);
     }
   }
 );
+
+// Rotta di callback per l'autenticazione GitHub
+// router.get('/github/callback',
+//   passport.authenticate('github', { failureRedirect: `${FRONTEND_URL}/login` }),
+//   handleAuthCallback
+// );
+
+// // Funzione helper per gestire il callback di autenticazione
+// async function handleAuthCallback(req, res) {
+//   try {
+//     const token = await generateJWT({ id: req.user._id });
+//     // Usa FRONTEND_URL per il reindirizzamento
+//     res.redirect(`${FRONTEND_URL}/login?token=${token}`);
+//   } catch (error) {
+//     console.error('Errore nella generazione del token:', error);
+//     res.redirect(`${FRONTEND_URL}/login?error=auth_failed`);
+//   }
+// }
 
 export default router;
