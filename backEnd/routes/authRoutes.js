@@ -1,6 +1,6 @@
 import express from "express";
 import Authors from "../models/Authors.js";
-import { generateJWT } from "../utils/jwt.js";
+import { generateJWT } from "../utils/Jwt.js";
 import { authMiddleware } from "../middlewares/authMiddleware.js";
 import passport from "../config/passportConfig.js"; //  Importiamo passport
 
