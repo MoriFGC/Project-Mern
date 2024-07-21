@@ -23,24 +23,21 @@ export default function Register() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const formData = new FormData();
-    formData.append('nome', formData.firstName);
-    formData.append('cognome', formData.lastName);
-    formData.append('email', formData.email);
-    formData.append('password', formData.password);
-    formData.append('dataDiNascita', formData.dateOfBirth);
-    if (formData.avatar) {
-      formData.append('avatar', formData.avatar);
+    const data = new FormData();
+    Object.keys(formData).forEach(key => data.append(key, formData[key]));
+    
+    if (avatar) {
+      data.append("avatar", avatar);
     }
     
     try {
-      await registerUser(formData);
+      await registerUser(data);
       alert("Registrazione avvenuta con successo!");
       navigate("/login");
     } catch (error) {
       console.error("Errore durante la registrazione:", error);
       if (error.response && error.response.data) {
-        alert(`Errore: ${error.response.data.message}`);
+        alert(`Errore: ${error.response.data.message || error.response.data}`);
       } else {
         alert("Errore durante la registrazione. Riprova.");
       }
