@@ -3,7 +3,6 @@ import Authors from '../models/Authors.js';
 import BlogPosts from '../models/BlogPosts.js';
 import cloudinaryUploader from "../config/cloudinaryConfig.js";
 import { authMiddleware } from "../middlewares/authMiddleware.js";
-router.use(authMiddleware); // Aggiungi questa linea all'inizio del file
 const router = express.Router();
 
 // router.get('/', async (req,res) => {
