@@ -6,7 +6,7 @@ import { DarkThemeToggle } from 'flowbite-react'
 
 export default function Footer({ darkMode, toggleDarkMode }) {
   return (
-    <footer className='px-10 py-8 w-full h-52 mt-auto flex flex-col justify-center bg-white dark:bg-footer border-t border-gray-200 dark:border-white/30 transition-colors duration-300'>
+    <footer className='px-10 py-8 w-full h-52 mt-auto flex flex-col justify-center bg-white dark:bg-black border-t border-gray-200 dark:border-white/30 transition-colors duration-300'>
         <div className='flex flex-col md:flex-row justify-between items-center w-full'>
             <div>
                 <Link to='/'>

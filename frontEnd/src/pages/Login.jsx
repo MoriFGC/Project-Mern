@@ -110,7 +110,7 @@ export default function Login() {
     <div className="min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8">
     <div className="max-w-md w-full space-y-8">
       <div className="bg-transparent p-8 rounded-lg shadow-md">
-        <h2 className="text-3xl font-bold mb-6 text-white text-center">Login</h2>
+        <h2 className="text-3xl font-bold mb-6 text-black dark:text-white text-center">Login</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <input
@@ -119,7 +119,7 @@ export default function Login() {
               placeholder="Email"
               onChange={handleChange}
               required
-              className="w-full px-4 py-2 rounded bg-gray-800 text-white border border-gray-700 focus:outline-none focus:border-green-500"
+              className="w-full px-4 py-2 rounded bg-white dark:bg-gray-800 text-black dark:text-white border border-gray-700 focus:outline-none focus:border-green-500"
             />
           </div>
           <div>
@@ -129,27 +129,27 @@ export default function Login() {
               placeholder="Password"
               onChange={handleChange}
               required
-              className="w-full px-4 py-2 rounded bg-gray-800 text-white border border-gray-700 focus:outline-none focus:border-green-500"
+              className="w-full px-4 py-2 rounded bg-white dark:bg-gray-800 text-black dark:text-white border border-gray-700 focus:outline-none focus:border-green-500"
             />
           </div>
           <button
             type="submit"
-            className="w-full bg-verde text-black text-xl font-mono font-semibold py-2 rounded hover:bg-green-700 transition duration-300"
+            className="w-full bg-verde text-white dark:text-black text-xl font-mono font-semibold py-2 rounded hover:bg-green-700 transition duration-300"
           >
             Login
           </button>
           <button 
             onClick={handleGoogleLogin} 
-            className="w-full bg-black text-verde border border-verde text-xl font-mono font-semibold py-2 rounded hover:bg-green-700 transition duration-300">
+            className="w-full  text-verde border border-verde text-xl font-mono font-semibold py-2 rounded hover:bg-green-700 transition duration-300">
             Login with Google
           </button>
           <button 
             onClick={handleGithubLogin} 
-            className="w-full bg-black text-verde border border-verde text-xl font-mono font-semibold py-2 rounded hover:bg-green-700 transition duration-300">
+            className="w-full  text-verde border border-verde text-xl font-mono font-semibold py-2 rounded hover:bg-green-700 transition duration-300">
             Login with Github
           </button>
         </form>
-        <p className="text-white text-center mt-8">Don't have an account? <Link to="/register" className="text-verde hover:text-white underline">Sign up</Link></p> 
+        <p className="text-black dark:text-white text-center mt-8">Don't have an account? <Link to="/register" className="text-verde hover:text-white underline">Sign up</Link></p> 
       </div>
     </div>
   </div>

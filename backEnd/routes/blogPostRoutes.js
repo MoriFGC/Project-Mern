@@ -203,7 +203,8 @@ router.get("/:id/comments", async (req, res) => {
       const newComment = {
         name: req.body.name,
         email: req.body.email,
-        content: req.body.content
+        content: req.body.content,
+        avatar: req.body.avatar
       };
       post.comments.push(newComment);
       await post.save();

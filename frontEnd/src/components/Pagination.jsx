@@ -10,19 +10,19 @@ export default function Pagination({
   limit,
 }) {
   return (
-    <div className="flex justify-center gap-4 items-center text-white font-semibold text-2xl absolute -bottom-24 w-full">
+    <div className="flex justify-center gap-4 items-center text-black dark:text-white font-semibold text-2xl absolute -bottom-24 w-full">
       <button
-        className="text-white border-2 border-solid border-transparent hover:border-verde text-2xl font-bold hover:text-white  rounded-full p-3 px-4 font-mono transition-all duration-300 ease-in-out"
+        className="text-black dark:text-white border-2 border-solid border-transparent hover:border-verde text-2xl font-bold rounded-full p-3 px-4 font-mono transition-all duration-300 ease-in-out"
         onClick={() => setCurrentPage(currentPage - 1)}
         disabled={currentPage === 1}
       >
         <MdKeyboardArrowLeft />
       </button>
-      <span className="text-white text-2xl font-semibold font-">
+      <span className="text-black dark:text-white text-2xl font-semibold font-">
         {currentPage}/{totalPages}
       </span>
       <button
-        className="text-white border-2 border-solid border-transparent hover:border-verde text-2xl font-bold hover:text-white rounded-full p-3 px-4 font-mono transition-all duration-300 ease-in-out"
+        className="text-black dark:text-white border-2 border-solid border-transparent hover:border-verde text-2xl font-bold rounded-full p-3 px-4 font-mono transition-all duration-300 ease-in-out"
         onClick={() => setCurrentPage(currentPage + 1)}
         disabled={currentPage === totalPages}
       >

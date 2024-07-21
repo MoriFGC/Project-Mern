@@ -36,13 +36,13 @@ export default function Register() {
 
   return (
     <div className="min-h-screen flex items-center justify-center mt-20">
-      <div className="p-6 bg-transparent rounded-lg shadow-md text-white">
+      <div className="p-6 bg-transparent rounded-lg shadow-md text-black dark:text-white">
       <h2 className="text-2xl font-bold font-mono text-center mb-7">Registration</h2>
       <form onSubmit={handleSubmit} className="flex flex-col gap-7">
         <div className="flex gap-2">
           <div className="flex flex-col">
             <label htmlFor="firstName">First Name</label>
-            <input className="px-4 py-2 rounded bg-gray-800 text-white border border-gray-700 focus:outline-none focus:border-green-500"
+            <input className="px-4 py-2 rounded bg-white dark:bg-gray-800 text-black dark:text-white border border-gray-700 focus:outline-none focus:border-green-500"
               type="text"
               id="firstName"
               name="firstName"
@@ -52,7 +52,7 @@ export default function Register() {
           </div>
           <div className="flex flex-col">
             <label htmlFor="lastName">Last Name</label>
-            <input className="px-4 py-2 rounded bg-gray-800 text-white border border-gray-700 focus:outline-none focus:border-green-500" 
+            <input className="px-4 py-2 rounded bg-white dark:bg-gray-800 text-black dark:text-white border border-gray-700 focus:outline-none focus:border-green-500" 
               type="text"
               id="lastName"
               name="lastName"
@@ -64,7 +64,7 @@ export default function Register() {
         <div className="flex gap-2">
           <div className="flex flex-col">
             <label htmlFor="email">Email</label>
-            <input className="px-4 py-2 rounded bg-gray-800 text-white border border-gray-700 focus:outline-none focus:border-green-500"
+            <input className="px-4 py-2 rounded bg-white dark:bg-gray-800 text-black dark:text-white border border-gray-700 focus:outline-none focus:border-green-500"
               type="email"
               id="email"
               name="email"
@@ -74,7 +74,7 @@ export default function Register() {
           </div>
           <div className="flex flex-col">
             <label htmlFor="password">Password</label>
-            <input className="px-4 py-2 rounded bg-gray-800 text-white border border-gray-700 focus:outline-none focus:border-green-500"
+            <input className="px-4 py-2 rounded bg-white dark:bg-gray-800 text-black dark:text-white border border-gray-700 focus:outline-none focus:border-green-500"
               type="password"
               id="password"
               name="password"
@@ -86,7 +86,7 @@ export default function Register() {
         <div className="flex flex-col gap-2">
           <div className="flex flex-col">
             <label htmlFor="dateOfBirth">Date of Birth</label>
-            <input className="px-4 py-2 rounded bg-gray-800 text-white border border-gray-700 focus:outline-none focus:border-green-500"
+            <input className="px-4 py-2 rounded bg-white dark:bg-gray-800 text-black dark:text-white border border-gray-700 focus:outline-none focus:border-green-500"
               type="date"
               id="dateOfBirth"
               name="dateOfBirth"
@@ -96,7 +96,7 @@ export default function Register() {
           </div>
           <div className="flex flex-col">
             <label htmlFor="avatar">Choose Profile Picture</label>
-            <input className="px-4 py-2 rounded bg-gray-800 text-white border border-gray-700 focus:outline-none focus:border-green-500"
+            <input className="px-4 py-2 rounded bg-white dark:bg-gray-800 text-black dark:text-white border border-gray-700 focus:outline-none focus:border-green-500"
               type="file"
               id="avatar"
               name="avatar"
@@ -105,7 +105,7 @@ export default function Register() {
             />
           </div>
         </div>
-        <button type="submit" className="bg-verde text-white px-4 py-2 rounded-md hover:bg-green-700">Register</button>
+        <button type="submit" className="bg-verde text-white dark:text-black px-4 py-2 rounded-md hover:bg-green-700">Register</button>
       </form>
       <p className="text-center text-gray-500 mt-5">
         Already have an account? <Link to="/login" className="text-verde hover:text-green-700">Login</Link>

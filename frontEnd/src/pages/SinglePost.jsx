@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState, Fragment } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import {
   getPost,
@@ -12,24 +12,34 @@ import {
 import { deletePost, updatePost } from "../services/Api";
 import { DeleteCheck } from "../components/DeleteCheck";
 import { UpdateModalPost } from "../components/UpdateModalPost";
-import PencilIcon from "@heroicons/react/24/solid/PencilIcon";
-import TrashIcon from "@heroicons/react/24/solid/TrashIcon";
+
+import {
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuItems,
+  Transition,
+} from "@headlessui/react";
+import { EllipsisVerticalIcon } from "@heroicons/react/24/solid";
 
 export default function Post() {
   const { id } = useParams();
   const [post, setPost] = useState(null); //post
-  const [isEditing, setIsEditing] = useState(false); 
+  const [isEditing, setIsEditing] = useState(false);
   const [editPost, setEditPost] = useState({});
   const [editingCommentId, setEditingCommentId] = useState(null);
-  const [editCommentContent, setEditCommentContent] = useState('');
+  const [editCommentContent, setEditCommentContent] = useState("");
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [author, setAuthor] = useState({});
   const [userData, setUserData] = useState(null);
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState("");
+  const [expandedComments, setExpandedComments] = useState({});
+
+  //console.log(userData);
 
   const navigate = useNavigate();
-//--------------------------------------- fetch user data -----------------------------
+  //--------------------------------------- fetch user data -----------------------------
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -48,7 +58,7 @@ export default function Post() {
       fetchAuthor();
     }
   }, [post]);
-//------------------------ fetch post, commenti e autori ----------------------
+  //------------------------ fetch post, commenti e autori ----------------------
   const fetchPostAndComments = async () => {
     try {
       const postResponse = await getPost(id);
@@ -68,7 +78,7 @@ export default function Post() {
       console.error("Errore nella richiesta dell'autore", error);
     }
   };
-//-------------- delete, post e update dei commenti -----------------------
+  //-------------- delete, post e update dei commenti -----------------------
   const handleCommentChange = (e) => {
     setNewComment(e.target.value);
   };
@@ -84,6 +94,7 @@ export default function Post() {
         name: `${userData.nome} ${userData.cognome}`,
         email: userData.email,
         content: newComment,
+        avatar: userData.avatar,
       };
       await addComment(id, commentData);
       const commentsResponse = await getComments(id);
@@ -109,7 +120,9 @@ export default function Post() {
   const handleCommentUpdate = async (e) => {
     e.preventDefault();
     try {
-      await updateComment(id, editingCommentId, { content: editCommentContent });
+      await updateComment(id, editingCommentId, {
+        content: editCommentContent,
+      });
       setComments((prevComments) =>
         prevComments.map((comment) =>
           comment._id === editingCommentId
@@ -118,12 +131,12 @@ export default function Post() {
         )
       );
       setEditingCommentId(null);
-      setEditCommentContent('');
+      setEditCommentContent("");
     } catch (error) {
       console.error("Errore nell'aggiornamento del commento:", error);
     }
   };
-//--------------------------------------- delete e update dei post --------------------------
+  //--------------------------------------- delete e update dei post --------------------------
   const handleDelete = async () => {
     try {
       await deletePost(id);
@@ -145,19 +158,28 @@ export default function Post() {
     e.preventDefault();
     try {
       await updatePost(editPost, id);
-      setPost(prevPost => ({ ...prevPost, ...editPost }));
+      setPost((prevPost) => ({ ...prevPost, ...editPost }));
       setIsEditing(false);
     } catch (error) {
       console.error("Error with the update function", error);
     }
   };
 
+  //funzione per gestire l'espansione/compressione dei commenti
+  const toggleCommentExpansion = (commentId) => {
+    setExpandedComments((prev) => ({
+      ...prev,
+      [commentId]: !prev[commentId],
+    }));
+  };
+
   if (!post) return <div>Caricamento...</div>;
 
   return (
-    <div className="mx-auto min-h-screen flex flex-col items-start mt-40 md:grid md:grid-cols-3 text-white">
+    <div className="mx-auto min-h-screen flex flex-col items-start mt-40 md:grid md:grid-cols-3 text-black dark:text-white">
       <div className="hidden md:block"></div>
-      <div className="flex flex-col items-center">
+      {/* inizio post */}
+      <div className="flex flex-col items-center relative">
         <img
           className="rounded-[20px] w-full mx-auto"
           src={post.cover}
@@ -167,112 +189,231 @@ export default function Post() {
           <h1 className="text-center text-3xl mt-5 mb-2 font-mono">
             {post.title}
           </h1>
-          <div className="bg-verde w-full xl:w-[80%] rounded-lg">
-            <p className="text-black font-mono p-3">{post.content}.</p>
+          <div className="bg-white dark:bg-footer border border-solid border-black/30 dark:border-white/30 dark:text-white w-full rounded-lg">
+            <p className=" font-mono p-3">{post.content}.</p>
           </div>
         </div>
+        {/* fine post */}
+        {/* ----------------------------- bottone per editare e delete ---------------------------- */}
         {userData?.email === post.author && (
-          <div className="flex justify-center gap-3 mt-8">
-            <button
-              onClick={() => setEditPost(post)}
-              className="text-white bg-verde border-2 border-solid border-verde hover:text-white hover:bg-black rounded-full p-2"
+          <Menu as="div" className="absolute right-2 -top-10">
+            <MenuButton>
+              <EllipsisVerticalIcon
+                className="w-7 h-7 border-2 border-transparent rounded-full hover:border-verde/50 transition duration-300 ease-in-out"
+                aria-hidden="true"
+              />
+            </MenuButton>
+            <Transition
+              as={Fragment}
+              enter="transition ease-out duration-100"
+              enterFrom="transform opacity-0 scale-95"
+              enterTo="transform opacity-100 scale-100"
+              leave="transition ease-in duration-75"
+              leaveFrom="transform opacity-100 scale-100"
+              leaveTo="transform opacity-0 scale-95"
             >
-              <PencilIcon className="w-[30px]" />
-            </button>
-            <button
-              onClick={deleteCheck}
-              className="text-white bg-[#ff0101] border-2 border-solid border-[#ff0101] font-bold hover:text-white hover:bg-black rounded-full p-2"
-            >
-              <TrashIcon className="w-[30px]" />
-            </button>
-          </div>
+              <MenuItems className="absolute right-0 w-40 mt-2 origin-top-right bg-white dark:bg-black divide-y divide-gray-100 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                <div className="px-1 py-1 ">
+                  <MenuItem>
+                    {({ active }) => (
+                      <button
+                        className={`${
+                          active
+                            ? "bg-verde text-white"
+                            : "text-black dark:text-white"
+                        } group flex rounded-md items-center w-full px-2 py-2 text-sm`}
+                        onClick={() => setEditPost(post)}
+                      >
+                        Update
+                      </button>
+                    )}
+                  </MenuItem>
+                  <MenuItem>
+                    {({ active }) => (
+                      <button
+                        className={`${
+                          active
+                            ? "bg-red-500 text-white"
+                            : "text-black dark:text-white"
+                        } group flex rounded-md items-center w-full px-2 py-2 text-sm`}
+                        onClick={deleteCheck}
+                      >
+                        Delete
+                      </button>
+                    )}
+                  </MenuItem>
+                </div>
+              </MenuItems>
+            </Transition>
+          </Menu>
         )}
-        <div className="w-full">
+        {/* fine bottone per editare e delete */}
+        <div className="w-full mt-20">
           <form
-            className="flex flex-col items-center gap-3 p-3 text-black"
+            className="flex flex-col items-center gap-1 p-3 text-black"
             onSubmit={handleCommentSubmit}
           >
             <textarea
               name="content"
               value={newComment}
               onChange={handleCommentChange}
-              placeholder="Il tuo commento"
-              className="w-full h-full"
+              placeholder="Type your comment here."
+              className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-transparent focus-visible:ring-offset-white focus:border-black focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
               required
             ></textarea>
             <button
               type="submit"
-              className="bg-verde border-2 border-solid border-verde hover:text-white hover:bg-black rounded-full p-2 w-full"
+              className="border-2 border-solid border-transparent hover:border-verde text-black dark:text-white  p-2 w-full transition duration-300 ease-in-out rounded-lg"
             >
-              Invia Commento
+              Send Comment
             </button>
           </form>
+
           <div className="flex flex-col items-center gap-3 p-3 text-black">
-            <h2 className="text-4xl font-semibold font-mono text-white">
+            <h2 className="text-4xl font-semibold font-mono text-black dark:text-white">
               Comments
             </h2>
             {comments.length > 0 ? (
               comments.map((comment) => (
                 <div
                   key={comment._id}
-                  className="text-white border-2 border-solid border-verde rounded-lg p-3 w-full"
+                  className="text-black dark:text-white border border-solid border-black/30 dark:border-white/30 bg-white dark:bg-footer p-3 w-full rounded-lg"
                 >
                   <div className="flex flex-col gap-2">
-                    <h3 className="text-2xl font-semibold font-mono text-verde">
-                      {comment.name}
-                    </h3>
-                    <h4 className="text-lg font-mono">{comment.email}</h4>
+                    <div className="flex justify-between items-center">
+                      <div className="flex items-center gap-2 ">
+                        <img
+                          src={comment.avatar}
+                          alt={comment.name}
+                          className="w-10 h-10 rounded-full"
+                        />
+                        <div className="flex flex-col">
+                          <h3 className="text-xl font-bold font-mono">
+                            {comment.name}
+                          </h3>
+                          <span className="text-sm font-mono text-black/80 dark:text-white/80">
+                            {comment.email}
+                          </span>
+                        </div>
+                      </div>
+                      {/* bottone per editare e delete */}
+                      {userData?.email === comment.email && (
+                        <Menu
+                          as="div"
+                          className="relative inline-block text-left"
+                        >
+                          <div>
+                            <MenuButton className="inline-flex justify-center w-full px-4 py-2 text-sm font-medium text-white rounded-md hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
+                              <EllipsisVerticalIcon
+                                className="w-5 h-5 text-black dark:text-white"
+                                aria-hidden="true"
+                              />
+                            </MenuButton>
+                          </div>
+                          <Transition
+                            as={Fragment}
+                            enter="transition ease-out duration-100"
+                            enterFrom="transform opacity-0 scale-95"
+                            enterTo="transform opacity-100 scale-100"
+                            leave="transition ease-in duration-75"
+                            leaveFrom="transform opacity-100 scale-100"
+                            leaveTo="transform opacity-0 scale-95"
+                          >
+                            <MenuItems className="absolute right-0 w-40 mt-2 origin-top-right bg-white dark:bg-black divide-y divide-gray-100 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                              <div className="px-1 py-1 ">
+                                <MenuItem>
+                                  {({ active }) => (
+                                    <button
+                                      className={`${
+                                        active
+                                          ? "bg-verde text-white"
+                                          : "text-black dark:text-white"
+                                      } group flex rounded-md items-center w-full px-2 py-2 text-sm`}
+                                      onClick={() => {
+                                        setEditingCommentId(comment._id);
+                                        setEditCommentContent(comment.content);
+                                      }}
+                                    >
+                                      Update
+                                    </button>
+                                  )}
+                                </MenuItem>
+                                <MenuItem>
+                                  {({ active }) => (
+                                    <button
+                                      className={`${
+                                        active
+                                          ? "bg-red-500 text-white"
+                                          : "text-black dark:text-white"
+                                      } group flex rounded-md items-center w-full px-2 py-2 text-sm`}
+                                      onClick={() =>
+                                        handleCommentDelete(comment._id)
+                                      }
+                                    >
+                                      Delete
+                                    </button>
+                                  )}
+                                </MenuItem>
+                              </div>
+                            </MenuItems>
+                          </Transition>
+                        </Menu>
+                      )}
+                      {/* fine bottone per editare e delete */}
+                    </div>
                     {editingCommentId === comment._id ? (
                       <form onSubmit={handleCommentUpdate}>
                         <textarea
                           value={editCommentContent}
-                          onChange={(e) => setEditCommentContent(e.target.value)}
+                          onChange={(e) =>
+                            setEditCommentContent(e.target.value)
+                          }
                           className="w-full p-2 text-black"
                         />
                         <button
                           type="submit"
                           className="bg-verde text-white p-2 mt-2 rounded"
                         >
-                          Salva
+                          Save
                         </button>
                         <button
                           onClick={() => {
                             setEditingCommentId(null);
-                            setEditCommentContent('');
+                            setEditCommentContent("");
                           }}
                           className="bg-gray-500 text-white p-2 mt-2 ml-2 rounded"
                         >
-                          Annulla
+                          Cancel
                         </button>
                       </form>
                     ) : (
-                      <p className="text-lg font-mono">{comment.content}</p>
+                      <div>
+                        <p
+                          className={`text-lg font-mono transition-all duration-300 whitespace-pre-wrap break-words ${
+                            expandedComments[comment._id]
+                              ? "line-clamp-none"
+                              : "line-clamp-2"
+                          }`}
+                        >
+                          {comment.content}
+                        </p>
+                        {comment.content.length > 100 && (
+                          <button
+                            onClick={() => toggleCommentExpansion(comment._id)}
+                            className="text-verde hover:underline mt-1 transition-all duration-300"
+                          >
+                            {expandedComments[comment._id]
+                              ? "Show less"
+                              : "Show more"}
+                          </button>
+                        )}
+                      </div>
                     )}
                   </div>
-                  {(userData?.email === comment.email ||
-                    userData?.email === post.author) && (
-                    <div className="flex justify-between gap-2 mt-2">
-                      <button
-                        onClick={() => {
-                          setEditingCommentId(comment._id);
-                          setEditCommentContent(comment.content);
-                        }}
-                        className="bg-verde border-2 w-full flex justify-center border-solid border-verde hover:text-white hover:bg-black rounded-full p-2"
-                      >
-                        <PencilIcon className="w-[30px]" />
-                      </button>
-                      <button
-                        onClick={() => handleCommentDelete(comment._id)}
-                        className="bg-[#ff0101] border-2 w-full flex justify-center border-solid border-[#ff0101] hover:text-white hover:bg-black rounded-full p-2"
-                      >
-                        <TrashIcon className="w-[30px]" />
-                      </button>
-                    </div>
-                  )}
                 </div>
               ))
             ) : (
-              <p className="text-white">No comments yet.</p>
+              <p className="text-black dark:text-white">No comments yet.</p>
             )}
           </div>
         </div>
@@ -294,7 +435,7 @@ export default function Post() {
       )}
       <Link
         to={`/author/${author._id}`}
-        className="flex flex-col items-center gap-3 text-white hover:text-verde mt-10 md:mt-0 hover:drop-shadow-2xl hover:scale-[1.02] transition duration-300 ease-in-out"
+        className="flex flex-col items-center gap-3 text-black dark:text-white hover:text-verde mb-20 mt-10 md:mt-0 hover:drop-shadow-2xl hover:scale-[1.02] transition duration-300 ease-in-out"
       >
         <h2 className="text-2xl font-semibold font-mono">Author</h2>
         <img

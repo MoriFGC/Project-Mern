@@ -40,8 +40,8 @@ export default function SingleAuthor() {
   };
 
   return (
-    <div className="flex flex-col items-center min-h-screen mb-10 text-white max-w-7xl mx-auto mt-40">
-      <div className="drop-shadow-2xl  mx-auto flex flex-col justify-center items-center gap-4 text-center text-white rounded-full my-5">
+    <div className="flex flex-col items-center min-h-screen mb-10 text-black dark:text-white max-w-7xl mx-auto mt-40">
+      <div className="drop-shadow-2xl  mx-auto flex flex-col justify-center items-center gap-4 text-center text-black dark:text-white rounded-full my-5">
         <div className="border-2 border-verde h-[200px] w-[200px] rounded-full ms-4">
           {author.avatar ? (
             <img

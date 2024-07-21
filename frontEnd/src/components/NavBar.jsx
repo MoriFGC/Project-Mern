@@ -58,7 +58,7 @@ export default function Navbar({ darkMode }) {
   };
 
   return (
-    <nav className="flex justify-between items-center px-10 py-5 h-[100px] text-black dark:text-white bg-white dark:bg-black fixed top-0 w-full z-50 transition-colors duration-300">
+    <nav className="flex justify-between items-center px-10 py-5 h-[100px] text-black dark:text-white bg-white dark:bg-black fixed top-0 w-full z-50 transition-colors duration-300 border-b border-gray-200 dark:border-white/30 ">
       <div>
         <Link to="/">
         <img className="md:w-[150px]" src={darkMode ? logoDark : logoWhite} alt="Strive logo" />
@@ -76,7 +76,7 @@ export default function Navbar({ darkMode }) {
           </div>
         </>
       ) : (
-        <div className="flex gap-4 justify-center items-center text-white font-mono">
+        <div className="flex gap-4 justify-center items-center text-black dark:text-white font-mono">
           <Link className="hover:text-verde" to="/login">Login</Link>
           <Link className="hover:text-verde" to="/register">Register</Link>
         </div>

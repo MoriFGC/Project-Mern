@@ -116,10 +116,10 @@ export default function CreatePost() {
     <div className="min-h-screen flex items-start justify-center px-4 sm:px-6 lg:px-8 mt-32">
     <div className="max-w-md w-full space-y-8">
       <div className="bg-transparent p-8 rounded-lg shadow-md">
-        <h2 className="text-3xl font-bold mb-6 text-white text-center">Create New Post</h2>
+        <h2 className="text-3xl font-bold mb-6 text-black dark:text-white text-center">Create New Post</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label htmlFor="title" className="block text-sm font-medium text-white mb-1">Title</label>
+            <label htmlFor="title" className="block text-sm font-medium text-black dark:text-white mb-1">Title</label>
             <input
               id="title"
               type="text"
@@ -127,11 +127,11 @@ export default function CreatePost() {
               value={post.title}
               onChange={handleChange}
               required
-              className="w-full px-4 py-2 rounded bg-gray-800 text-white border border-gray-700 focus:outline-none focus:border-green-500"
+              className="w-full px-4 py-2 rounded bg-white dark:bg-gray-800 text-black dark:text-white border border-gray-700 focus:outline-none focus:border-green-500"
             />
           </div>
           <div>
-            <label htmlFor="category" className="block text-sm font-medium text-white mb-1">Category</label>
+            <label htmlFor="category" className="block text-sm font-medium text-black dark:text-white mb-1">Category</label>
             <input
               id="category"
               type="text"
@@ -139,23 +139,23 @@ export default function CreatePost() {
               value={post.category}
               onChange={handleChange}
               required
-              className="w-full px-4 py-2 rounded bg-gray-800 text-white border border-gray-700 focus:outline-none focus:border-green-500"
+              className="w-full px-4 py-2 rounded bg-white dark:bg-gray-800 text-black dark:text-white border border-gray-700 focus:outline-none focus:border-green-500"
             />
           </div>
           <div>
-            <label htmlFor="cover" className="block text-sm font-medium text-white mb-1">Cover Image</label>
+            <label htmlFor="cover" className="block text-sm font-medium text-black dark:text-white mb-1">Cover Image</label>
             <input
               id="cover"
               type="file"
               name="cover"
               onChange={handleFileChange}
               required
-              className="w-full px-4 py-2 rounded bg-gray-800 text-white border border-gray-700 focus:outline-none focus:border-green-500"
+              className="w-full px-4 py-2 rounded bg-white dark:bg-gray-800 text-black dark:text-white border border-gray-700 focus:outline-none focus:border-green-500"
             />
             {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
           </div>
           <div>
-            <label htmlFor="readTimeValue" className="block text-sm font-medium text-white mb-1">Read Time (minutes)</label>
+            <label htmlFor="readTimeValue" className="block text-sm font-medium text-black dark:text-white mb-1">Read Time (minutes)</label>
             <input
               id="readTimeValue"
               type="number"
@@ -163,34 +163,34 @@ export default function CreatePost() {
               value={post.readTime.value}
               onChange={handleChange}
               required
-              className="w-full px-4 py-2 rounded bg-gray-800 text-white border border-gray-700 focus:outline-none focus:border-green-500"
+              className="w-full px-4 py-2 rounded bg-white dark:bg-gray-800 text-black dark:text-white border border-gray-700 focus:outline-none focus:border-green-500"
             />
           </div>
           <div>
-            <label htmlFor="author" className="block text-sm font-medium text-white mb-1">Author Email</label>
+            <label htmlFor="author" className="block text-sm font-medium text-black dark:text-white mb-1">Author Email</label>
             <input
               id="author"
               type="email"
               name="author"
               value={post.author}
               readOnly
-              className="w-full px-4 py-2 rounded bg-gray-800 text-white border border-gray-700 focus:outline-none focus:border-green-500"
+              className="w-full px-4 py-2 rounded bg-white dark:bg-gray-800 text-black dark:text-white border border-gray-700 focus:outline-none focus:border-green-500"
             />
           </div>
           <div>
-            <label htmlFor="content" className="block text-sm font-medium text-white mb-1">Content</label>
+            <label htmlFor="content" className="block text-sm font-medium text-black dark:text-white mb-1">Content</label>
             <textarea
               id="content"
               name="content"
               value={post.content}
               onChange={handleChange}
               required
-              className="w-full px-4 py-2 rounded bg-gray-800 text-white border border-gray-700 focus:outline-none focus:border-green-500 h-32"
+              className="w-full px-4 py-2 rounded bg-white dark:bg-gray-800 text-black dark:text-white border border-gray-700 focus:outline-none focus:border-green-500 h-32"
             />
           </div>
           <button
             type="submit"
-            className="w-full bg-verde text-black font-mono font-bold py-2 rounded hover:bg-green-700 transition duration-300"
+            className="w-full bg-verde text-black dark:text-white font-mono font-bold py-2 rounded hover:bg-green-700 transition duration-300"
           >
             Create Post
           </button>
