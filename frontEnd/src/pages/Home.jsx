@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from "react-router-dom";
-import { getPosts } from '../services/Api';
+import { getPosts, getAuthorEmail, getMe } from '../services/Api';
 import Post from '../components/Post';
 import Pagination from '../components/Pagination';
 
@@ -11,6 +11,7 @@ export default function Home() {
     const [searchTitle, setSearchTitle] = useState('');
     const [isLoading, setIsLoading] = useState(true);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [author, setAuthor] = useState(null);
     const [userData, setUserData] = useState(null);
 
     const navigate = useNavigate();
@@ -44,22 +45,6 @@ export default function Home() {
         }
     }
 
-    const getAuthor = async () => {
-        try {
-            const token = localStorage.getItem("token");
-            if(!token) {
-                navigate('/login')
-                return 
-            } 
-            const user = await getMe()
-            setAuthor(user)
-        } catch (error) {
-            console.error('Errore nella richiesta dell\'autore', error);
-        }
-    }
-
-    getAuthor()
-
     const fetchAuthor = async () => {
         if (userData && userData.email) {
             try {
@@ -83,6 +68,7 @@ export default function Home() {
         fetchPosts();
     }, [currentPage, searchTitle]);
 
+   
     if (!isLoggedIn) {
         navigate("/login");
         return null;
