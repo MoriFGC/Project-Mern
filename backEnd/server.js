@@ -75,12 +75,16 @@ app.use(
   })
 );
 
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+
 mongoose.connect(process.env.MONGO_URI)
     .then(() => console.log('MongoDB connesso'))
     .catch((err) => console.error('Errore di connessione', err));
 
-app.use(passport.initialize());
-app.use(passport.session());
+
 
 app.use("/api/auth", authRoutes);
 app.use('/api/authors', authorRoutes);
@@ -90,12 +94,16 @@ app.get('/api/test', (req, res) => {
   res.json({ message: 'Server is working correctly' });
 });
 
+
+const PORT = process.env.PORT || 5000;
+
+
 app.use(badRequestHandler);
 app.use(unauthorizedHandler);
 app.use(notFoundHandler);
 app.use(genericErrorHandler);
 
-const PORT = process.env.PORT || 5000;
+
 
 app.listen(PORT, () => {
     console.log(`Server connesso sulla porta ${PORT}`);
