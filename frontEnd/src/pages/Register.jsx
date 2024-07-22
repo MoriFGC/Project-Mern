@@ -38,18 +38,18 @@ export default function Register() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const formData = new FormData();
-      Object.keys(form).forEach(key => {
-        if (form[key]) {
-          if (key === 'avatar' && form[key] instanceof File) {
-            formData.append(key, form[key], form[key].name);
+      const dataForm = new dataForm();
+      Object.keys(formData).forEach(key => {
+        if (formData[key]) {
+          if (key === 'avatar' && formData[key] instanceof File) {
+            dataForm.append(key, form[key], form[key].name);
           } else {
-            formData.append(key, form[key]);
+            dataForm.append(key, formData[key]);
           }
-          console.log(`Appending to FormData: ${key}:`, form[key]);
+          console.log(`Appending to dataForm: ${key}:`, formData[key]);
         }
       });
-      await registerUser(formData);
+      await registerUser(dataForm);
       alert("Registrazione avvenuta con successo!");
       navigate('/login');
     } catch(err) {
