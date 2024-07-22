@@ -2,7 +2,6 @@ import './App.css'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 import Home from './pages/Home'
 import Navbar from './components/NavBar'
-import Footer from './components/Footer'
 import SinglePost from './pages/SinglePost'
 import CreatePost from './pages/CreatePost'
 import SingleAuthor from './pages/SingleAuthor'
@@ -11,6 +10,7 @@ import Login from './pages/Login'
 import Page404 from './pages/Page404'
 import { Flowbite } from 'flowbite-react'
 import { useState, useEffect } from 'react'
+import { FlowbiteFT } from './components/FlowbiteFooter'
 
 function App() {
   const [darkMode, setDarkMode] = useState(() => localStorage.getItem('darkMode') === 'true');
@@ -40,7 +40,7 @@ function App() {
           <Route path='/author/:id' element={<SingleAuthor />} />
           <Route path='*' element={<Page404 />} />
         </Routes>
-        <Footer darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
+        <FlowbiteFT darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
       </Router>
     </Flowbite>
   )
