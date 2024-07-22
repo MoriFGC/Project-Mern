@@ -71,17 +71,6 @@ router.get('/:id', async (req,res) => {
         res.status(500).json({message: err.message});
     }})
 
-/*
-router.post('/', async (req,res) => {
-    const author = new Authors(req.body);
-    try {
-        const newAuthor = await author.save();
-        res.status(201).json(newAuthor)
-    }catch(err) {
-        res.status(400).json({message: err.message});
-    }
-});
-*/
 
 // NEW! POST /authors: crea un nuovo autore
 router.post("/", async (req, res) => {
@@ -107,20 +96,6 @@ router.post("/", async (req, res) => {
     }
   });
 
-//   router.post("/", async (req, res) => {
-//     console.log("Received registration request:", req.body);
-//     try {
-//       const author = new Authors(req.body);
-//       const newAuthor = await author.save();
-//       console.log("New author saved:", newAuthor);
-//       const authorResponse = newAuthor.toObject();
-//       delete authorResponse.password;
-//       res.status(201).json(authorResponse);
-//     } catch (err) {
-//       console.error("Error during registration:", err);
-//       res.status(400).json({ message: err.message });
-//     }
-//   });
 
 router.put('/:id', async (req,res) => {
     try{
