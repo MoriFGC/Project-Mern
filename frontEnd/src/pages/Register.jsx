@@ -21,41 +21,41 @@ export default function Register() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // // Gestore per la sottomissione del form
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault(); // Previene il comportamento predefinito del form di ricaricare la pagina
-  //   try {
-  //     await registerUser(formData); // Chiama la funzione registerUser con i dati del form
-  //     //console.log(formData);
-  //     alert("Registrazione avvenuta con successo!"); // Mostra un messaggio di successo
-  //     navigate("/login"); // Naviga alla pagina di login dopo la registrazione
-  //   } catch (error) {
-  //     console.error("Errore durante la registrazione:", error); // Logga l'errore in console
-  //     alert("Errore durante la registrazione. Riprova."); // Mostra un messaggio di errore
-  //   }
-  // };
-
+  // Gestore per la sottomissione del form
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault(); // Previene il comportamento predefinito del form di ricaricare la pagina
     try {
-      const dataForm = new dataForm();
-      Object.keys(formData).forEach(key => {
-        if (formData[key]) {
-          if (key === 'avatar' && formData[key] instanceof File) {
-            dataForm.append(key, form[key], form[key].name);
-          } else {
-            dataForm.append(key, formData[key]);
-          }
-          console.log(`Appending to dataForm: ${key}:`, formData[key]);
-        }
-      });
-      await registerUser(dataForm);
-      alert("Registrazione avvenuta con successo!");
-      navigate('/login');
-    } catch(err) {
-      console.error("Errore nella registrazione", err.response?.data || err.message);
+      await registerUser(formData); // Chiama la funzione registerUser con i dati del form
+      //console.log(formData);
+      alert("Registrazione avvenuta con successo!"); // Mostra un messaggio di successo
+      navigate("/login"); // Naviga alla pagina di login dopo la registrazione
+    } catch (error) {
+      console.error("Errore durante la registrazione:", error); // Logga l'errore in console
+      alert("Errore durante la registrazione. Riprova."); // Mostra un messaggio di errore
     }
-  }
+  };
+
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   try {
+  //     const dataForm = new dataForm();
+  //     Object.keys(formData).forEach(key => {
+  //       if (formData[key]) {
+  //         if (key === 'avatar' && formData[key] instanceof File) {
+  //           dataForm.append(key, form[key], form[key].name);
+  //         } else {
+  //           dataForm.append(key, formData[key]);
+  //         }
+  //         console.log(`Appending to dataForm: ${key}:`, formData[key]);
+  //       }
+  //     });
+  //     await registerUser(dataForm);
+  //     alert("Registrazione avvenuta con successo!");
+  //     navigate('/login');
+  //   } catch(err) {
+  //     console.error("Errore nella registrazione", err.response?.data || err.message);
+  //   }
+  // }
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8 mt-36">
