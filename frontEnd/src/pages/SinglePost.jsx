@@ -21,8 +21,8 @@ import {
   Transition,
 } from "@headlessui/react";
 import { EllipsisVerticalIcon } from "@heroicons/react/24/solid";
-import userImg from '../assets/user.svg'
-"use client";
+import userImg from "../assets/user.svg";
+("use client");
 
 import { Spinner } from "flowbite-react";
 
@@ -78,11 +78,17 @@ export default function Post() {
   const fetchAuthor = async () => {
     try {
       const response = await getAuthorEmail(post.author);
-      setAuthor(response.data);
+      const authorData = response.data;
+      setAuthor({
+        ...authorData,
+        avatar: authorData.avatar || userImg // Usa userImg come fallback
+      });
     } catch (error) {
       console.error("Errore nella richiesta dell'autore", error);
+      setAuthor({ avatar: userImg }); // Imposta un avatar di default in caso di errore
     }
   };
+  
   //-------------- delete, post e update dei commenti -----------------------
   const handleCommentChange = (e) => {
     setNewComment(e.target.value);
@@ -178,10 +184,17 @@ export default function Post() {
     }));
   };
 
-  if (!post) return <div className="mt-52 min-h-screen flex flex-col items-center justify-center gap-5 text-2xl">
-    <Spinner color="success" aria-label="Success spinner example" className="w-20 h-20"/>
-    Loading...
-    </div>;
+  if (!post)
+    return (
+      <div className="mt-52 min-h-screen flex flex-col items-center justify-center gap-5 text-2xl">
+        <Spinner
+          color="success"
+          aria-label="Success spinner example"
+          className="w-20 h-20"
+        />
+        Loading...
+      </div>
+    );
 
   return (
     <div className="mx-auto min-h-screen flex flex-col items-start mt-40 md:grid md:grid-cols-3 text-black dark:text-white">
@@ -445,11 +458,14 @@ export default function Post() {
         to={`/author/${author._id}`}
         className="flex flex-col items-center gap-3 text-black dark:text-white mb-20 mt-10 md:mt-0 hover:drop-shadow-2xl hover:scale-[1.02] transition duration-300 ease-in-out hover:text-verde group"
       >
-        <h2 className="text-2xl font-semibold font-mono group-hover:text-verde">Author</h2>
+        <h2 className="text-2xl font-semibold font-mono group-hover:text-verde">
+          Author
+        </h2>
         <img
           className="rounded-full w-[30%] group-hover:text-verde"
-          src={author.avatar || userImg}
-          alt={author.nome}
+          src={avatarError ? userImg : author.avatar || userImg}
+          alt={`${author.nome || "Author"}'s avatar`}
+          onError={() => setAvatarError(true)}
         />
         <h3 className="text-xl font-semibold font-mono group-hover:text-verde">
           {author.nome} {author.cognome}
