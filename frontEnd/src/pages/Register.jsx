@@ -52,13 +52,14 @@ export default function Register() {
         console.error("Response headers:", error.response.headers);
       }
       alert("Errore durante la registrazione. Riprova.");
+      if (!formData.nome.trim()) {
+        alert("Il campo Nome è obbligatorio");
+        return;
+      }
     }
   };
 
-  if (!formData.nome.trim()) {
-    alert("Il campo Nome è obbligatorio");
-    return;
-  }
+
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8 mt-36">
