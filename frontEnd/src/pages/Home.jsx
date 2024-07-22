@@ -54,36 +54,31 @@ export default function Home() {
             } 
             const user = await getMe()
             setAuthor(user)
-            console.log(author);
         } catch (error) {
             console.error('Errore nella richiesta dell\'autore', error);
         }
     }
 
+    getAuthor()
 
-    // const fetchAuthor = async () => {
-    //     if (userData && userData.email) {
-    //         try {
-    //             const response = await getAuthorEmail(userData.email);
-    //             if (response && response.data) {
-    //                 setAuthor(response.data);
-    //             } else {
-    //                 console.error("Dati dell'autore non validi");
-    //             }
-    //         } catch (error) {
-    //             console.error("Errore nella richiesta dell'autore", error);
-    //         }
-    //     }
-    // };
-
-    // useEffect(() => {
-    //     fetchAuthor();
-    // }, [userData]);
+    const fetchAuthor = async () => {
+        if (userData && userData.email) {
+            try {
+                const response = await getAuthorEmail(userData.email);
+                if (response && response.data) {
+                    setAuthor(response.data);
+                } else {
+                    console.error("Dati dell'autore non validi");
+                }
+            } catch (error) {
+                console.error("Errore nella richiesta dell'autore", error);
+            }
+        }
+    };
 
     useEffect(() => {
-        getAuthor()
-        console.log(author);
-    }, []);
+        fetchAuthor();
+    }, [userData]);
 
     useEffect(() => {
         fetchPosts();

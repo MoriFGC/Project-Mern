@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import bcrypt from "bcrypt"; 
 
 const authorSchema = new mongoose.Schema({
-    nome: { type: String, required: true },
+    nome: { type: String },
     cognome: { type: String },
     email: { type: String, unique: true },
     dataDiNascita: { type: String },
