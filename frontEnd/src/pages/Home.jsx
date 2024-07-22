@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from "react-router-dom";
-import { getPosts, getAuthorEmail } from '../services/Api';
+import { getPosts, getAuthorEmail, getMe } from '../services/Api';
 import Post from '../components/Post';
 import Pagination from '../components/Pagination';
 
@@ -45,24 +45,45 @@ export default function Home() {
         }
     }
 
-    const fetchAuthor = async () => {
-        if (userData && userData.email) {
-            try {
-                const response = await getAuthorEmail(userData.email);
-                if (response && response.data) {
-                    setAuthor(response.data);
-                } else {
-                    console.error("Dati dell'autore non validi");
-                }
-            } catch (error) {
-                console.error("Errore nella richiesta dell'autore", error);
-            }
+    const getAuthor = async () => {
+        try {
+            const token = localStorage.getItem("token");
+            if(!token) {
+                navigate('/login')
+                return 
+            } 
+            const user = await getMe()
+            setAuthor(user)
+            console.log(author);
+        } catch (error) {
+            console.error('Errore nella richiesta dell\'autore', error);
         }
-    };
+    }
+
+
+    // const fetchAuthor = async () => {
+    //     if (userData && userData.email) {
+    //         try {
+    //             const response = await getAuthorEmail(userData.email);
+    //             if (response && response.data) {
+    //                 setAuthor(response.data);
+    //             } else {
+    //                 console.error("Dati dell'autore non validi");
+    //             }
+    //         } catch (error) {
+    //             console.error("Errore nella richiesta dell'autore", error);
+    //         }
+    //     }
+    // };
+
+    // useEffect(() => {
+    //     fetchAuthor();
+    // }, [userData]);
 
     useEffect(() => {
-        fetchAuthor();
-    }, [userData]);
+        getAuthor()
+        console.log(author);
+    }, []);
 
     useEffect(() => {
         fetchPosts();
