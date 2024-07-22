@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'https://project-mern-3pf8.onrender.com/api';
+const API_URL = 'https://project-mern-3pf8.onrender.com/api' || 'http://localhost:5001/api';
 const api = axios.create({baseURL: API_URL});
 
 api.interceptors.request.use(
