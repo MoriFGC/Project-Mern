@@ -13,9 +13,7 @@ export function FlowbiteFT({ darkMode, toggleDarkMode }) {
   return (
     <Footer container className="dark:bg-black transition-all duration-300 ease-in-out">
       <div className="max-w-7xl mx-auto w-full ">
-        <div className="grid w-full justify-between sm:flex sm:justify-between md:flex md:grid-cols-1">
-        <DarkThemeToggle onClick={toggleDarkMode} className='text-black dark:text-white mt-5 lg:mt-0 hover:border-verde border-2 border-solid border-transparent hover:bg-transparent transition-all duration-300 ease-in-out lg:absolute lg:left-1/2 lg:transform lg:-translate-x-1/2 '/>
-          <div>
+        <div className="grid w-full justify-between sm:flex sm:justify-between md:flex md:grid-cols-1">          <div>
             <Link to="/">
               <Footer.Brand
                 className="md:w-[150px]" src={darkMode ? logoDark : logoWhite} alt="Strive logo"
@@ -49,6 +47,7 @@ export function FlowbiteFT({ darkMode, toggleDarkMode }) {
         <Footer.Divider />
         <div className="w-full sm:flex sm:items-center sm:justify-between">
           <Footer.Copyright href="#" by="Strive School™" year={2024} />
+          <DarkThemeToggle onClick={toggleDarkMode} className='text-black dark:text-white mt-5 lg:mt-0 hover:border-verde border-2 border-solid border-transparent hover:bg-transparent transition-all duration-300 ease-in-out lg:absolute lg:left-1/2 lg:transform lg:-translate-x-1/2 '/>
           <div className="mt-4 flex space-x-6 sm:mt-0 sm:justify-center">
             <Footer.Icon href="#" icon={BsFacebook} />
             <Footer.Icon href="#" icon={BsInstagram} />
