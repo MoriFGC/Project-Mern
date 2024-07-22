@@ -75,7 +75,7 @@ export default function SingleAuthor() {
         <div className="flex flex-col items-center justify-center mt-10">
             <img src={gif} alt='404' className='w-full max-w-[300px] sm:max-w-[400px] md:max-w-[500px] lg:max-w-[600px] xl:max-w-[700px] mb-8'/>
           <p className="text-xl font-mono">No posts yet</p>
-          {author.email && <Link to="/create" className="border-2 border-solid border-transparent text-xl font-bold text-white bg-black/30 hover:bg-white/30 hover:border-verde rounded-xl p-[5px] md:p-[10px] md:px-4 font-mono mt-5 transition-all duration-300 ease-in-out"><button>+ Create your first post</button></Link>}
+          {author.email && <Link to="/create" className="border-2 border-solid border-transparent text-xl font-bold text-white bg-black/30 hover:dark:bg-white/30 hover:bg-verde/30 hover:border-verde rounded-xl p-[5px] md:p-[10px] md:px-4 font-mono mt-5 transition-all duration-300 ease-in-out"><button>+ Create your first post</button></Link>}
         </div>
       )}
     </div>
