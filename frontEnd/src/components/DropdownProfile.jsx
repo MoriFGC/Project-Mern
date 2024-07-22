@@ -3,15 +3,15 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
 import img from '../assets/user.svg'
 
-export default function DropdownProfile({ handleLogout, author }) {
+export default function DropdownProfile({ handleLogout, userData }) {
     const navigate = useNavigate()
 
-    if (!author) {
-        return null; // o un componente di caricamento
+    if (!userData) {
+        return null;
     }
 
     const dropdownItems = [
-        {name: 'Profile', onClick: () => navigate(`/author/${author._id}`)},
+        {name: 'Profile', onClick: () => navigate(`/author/${userData._id}`)},
         {name: 'Settings', href: '#'},
         {name: 'Logout', onClick: handleLogout},
     ]
@@ -21,10 +21,10 @@ export default function DropdownProfile({ handleLogout, author }) {
             {({ open }) => (
                 <>
                     <MenuButton className='rounded-full w-12'>
-                        {author.avatar ? (
-                            <img className='rounded-full border-2 border-verde' src={author.avatar} alt={author.nome} />
+                        {userData.avatar ? (
+                            <img className='rounded-full border-2 border-verde' src={userData.avatar} alt={userData.nome} />
                         ) : (
-                            <img className='rounded-full border-2 border-verde' src={img} alt={author.nome} />
+                            <img className='rounded-full border-2 border-verde' src={img} alt={userData.nome} />
                         )}
                     </MenuButton>  
                     <AnimatePresence>

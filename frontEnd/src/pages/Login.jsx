@@ -1,42 +1,35 @@
-import { useEffect, useState } from "react";
-import { Link, useNavigate, useLocation } from "react-router-dom";
-import { loginUser } from "../services/Api.js";
+import { useState, useEffect } from "react";
+import { useNavigate, useLocation, Link } from "react-router-dom";
+import { loginUser, getUserData } from "../services/Api.js";
 
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5001/api";
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5001";
 
 export default function Login() {
+  const [formData, setFormData] = useState({ email: "", password: "" });
   const navigate = useNavigate();
   const location = useLocation();
-
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-  });
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      setIsLoggedIn(true);
-      navigate("/");
-    }
-  }, [navigate]);
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     const token = params.get("token");
-    const userDataParam = params.get("userData");
+    
     if (token) {
       localStorage.setItem("token", token);
-      if (userDataParam) {
-        const userData = JSON.parse(decodeURIComponent(userDataParam));
-        localStorage.setItem("userData", JSON.stringify(userData));
-      }
-      window.dispatchEvent(new Event("storage"));
-      setIsLoggedIn(true);
-      navigate("/");
+      fetchUserData(token);
     }
   }, [location, navigate]);
+
+  const fetchUserData = async (token) => {
+    try {
+      const userData = await getUserData();
+      localStorage.setItem("userData", JSON.stringify(userData));
+      window.dispatchEvent(new Event("storage"));
+      window.dispatchEvent(new Event("loginStateChange"));
+      navigate("/");
+    } catch (error) {
+      console.error("Errore nel recupero dei dati utente:", error);
+    }
+  };
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -47,10 +40,7 @@ export default function Login() {
     try {
       const response = await loginUser(formData);
       localStorage.setItem("token", response.token);
-      localStorage.setItem("userData", JSON.stringify(formData));
-      window.dispatchEvent(new Event("storage"));
-      setIsLoggedIn(true);
-      navigate("/");
+      await fetchUserData(response.token);
     } catch (error) {
       console.error("Errore durante il login:", error);
       alert("Credenziali non valide. Riprova.");
@@ -60,7 +50,7 @@ export default function Login() {
   const handleGoogleLogin = () => {
     window.location.href = `${API_URL}/api/auth/google`;
   };
-  
+
   const handleGitHubLogin = () => {
     window.location.href = `${API_URL}/api/auth/github`;
   };

@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import logoDark from "../assets/logoDark.svg";
 import logoWhite from "../assets/logoWhite.svg";
 import DropdownProfile from "./DropdownProfile";
+import { getUserData } from "../services/Api";
 
 export default function Navbar({ darkMode }) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -10,24 +11,37 @@ export default function Navbar({ darkMode }) {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const checkLoginStatus = () => {
+    const checkLoginStatus = async () => {
       const token = localStorage.getItem("token");
-      const storedUserData = JSON.parse(localStorage.getItem("userData"));
-      setIsLoggedIn(!!token);
-      setUserData(storedUserData);
+      if (token) {
+        try {
+          const user = await getUserData();
+          setUserData(user);
+          setIsLoggedIn(true);
+        } catch (error) {
+          console.error("Token non valido:", error);
+          localStorage.removeItem("token");
+          setIsLoggedIn(false);
+          setUserData(null);
+        }
+      } else {
+        setIsLoggedIn(false);
+        setUserData(null);
+      }
     };
 
     checkLoginStatus();
     window.addEventListener("storage", checkLoginStatus);
+    window.addEventListener("loginStateChange", checkLoginStatus);
 
     return () => {
       window.removeEventListener("storage", checkLoginStatus);
+      window.removeEventListener("loginStateChange", checkLoginStatus);
     };
   }, []);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
-    localStorage.removeItem("userData");
     setIsLoggedIn(false);
     setUserData(null);
     navigate("/login");
@@ -42,7 +56,7 @@ export default function Navbar({ darkMode }) {
       </div>
       {isLoggedIn ? (
         <>
-          {userData && <DropdownProfile handleLogout={handleLogout} author={userData} />}
+          {userData && <DropdownProfile handleLogout={handleLogout} userData={userData} />}
           <div>
             <Link to="/create">
               <button className="border-2 border-solid border-transparent text-xl font-bold hover:border-verde rounded-lg p-[5px] md:p-[10px] md:px-4 font-mono transition-all duration-300 ease-in-out">
