@@ -37,7 +37,7 @@ router.get('/mail/:email', async (req, res) => {
 router.get('/', async (req, res) => {
     try {
         const page = parseInt(req.query.page) || 1;
-        const limit = parseInt(req.query.limit) || 10;
+        const limit = parseInt(req.query.limit) || 100;
         const sort = req.query.sort || 'nome';
         const sortDirection = req.query.sortDirection === 'desc' ? -1 : 1;
         const skip = (page -1) * limit;
