@@ -448,7 +448,7 @@ export default function Post() {
         <h2 className="text-2xl font-semibold font-mono group-hover:text-verde">Author</h2>
         <img
           className="rounded-full w-[30%] group-hover:text-verde"
-          src={author.avatar}
+          src={author.avatar || userImg}
           alt={author.nome}
         />
         <h3 className="text-xl font-semibold font-mono group-hover:text-verde">
