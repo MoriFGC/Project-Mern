@@ -30,7 +30,7 @@ const corsOptions = {
     // Definiamo una whitelist di origini consentite. 
     // Queste sono gli URL da cui il nostro frontend farà richieste al backend.
     const whitelist = [
-      'http://localhost:5173/', // Frontend in sviluppo
+      'http://localhost:5173', // Frontend in sviluppo
       'https://project-mern-nine.vercel.app', // Frontend in produzione (prendere da vercel!)
       'https://project-mern-3pf8.onrender.com' // URL del backend (prendere da render!)
     ];
