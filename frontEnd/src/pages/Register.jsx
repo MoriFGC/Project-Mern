@@ -1,61 +1,51 @@
-import { useState } from "react"; // Importa il hook useState da React per gestire lo stato del componente
-import { Link, useNavigate } from "react-router-dom"; // Importa useNavigate da react-router-dom per navigare tra le pagine
-import { registerUser } from "../services/Api.js"; // Importa la funzione registerUser dal file api.js per effettuare la registrazione
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { registerUser } from "../services/Api.js";
 
 export default function Register() {
-  // Definisce lo stato del form con useState, inizializzato con campi vuoti
   const [formData, setFormData] = useState({
     nome: "",
     cognome: "",
     email: "",
     password: "",
     dataDiNascita: "",
-    avatar: "",
+    avatar: null,
   });
 
-  const navigate = useNavigate(); // Inizializza useNavigate per poter navigare programmaticamente
+  const navigate = useNavigate();
 
-  // Gestore per aggiornare lo stato quando i campi del form cambiano
   const handleChange = (e) => {
-    // Aggiorna il campo corrispondente nello stato con il valore attuale dell'input
     setFormData({ ...formData, [e.target.name]: e.target.value });
+    console.log(formData);
   };
 
-  // Gestore per la sottomissione del form
+  const handleFileChange = (e) => {
+    setFormData({ ...formData, avatar: e.target.files[0] });
+    console.log(formData);
+  };
+
   const handleSubmit = async (e) => {
-    e.preventDefault(); // Previene il comportamento predefinito del form di ricaricare la pagina
+    e.preventDefault();
     try {
-      await registerUser(formData); // Chiama la funzione registerUser con i dati del form
-      //console.log(formData);
-      alert("Registrazione avvenuta con successo!"); // Mostra un messaggio di successo
-      navigate("/login"); // Naviga alla pagina di login dopo la registrazione
+      const formDataToSend = new FormData();
+      Object.keys(formData).forEach(key => {
+        if (formData[key]) {
+          if (key === 'avatar' && formData[key] instanceof File) {
+            formDataToSend.append(key, formData[key], formData[key].name);
+          } else {
+            formDataToSend.append(key, formData[key]);
+          }
+        }
+      });
+      
+      await registerUser(formDataToSend);
+      alert("Registrazione avvenuta con successo!");
+      navigate("/login");
     } catch (error) {
-      console.error("Errore durante la registrazione:", error); // Logga l'errore in console
-      alert("Errore durante la registrazione. Riprova."); // Mostra un messaggio di errore
+      console.error("Errore durante la registrazione:", error);
+      alert("Errore durante la registrazione. Riprova.");
     }
   };
-
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-  //   try {
-  //     const dataForm = new dataForm();
-  //     Object.keys(formData).forEach(key => {
-  //       if (formData[key]) {
-  //         if (key === 'avatar' && formData[key] instanceof File) {
-  //           dataForm.append(key, form[key], form[key].name);
-  //         } else {
-  //           dataForm.append(key, formData[key]);
-  //         }
-  //         console.log(`Appending to dataForm: ${key}:`, formData[key]);
-  //       }
-  //     });
-  //     await registerUser(dataForm);
-  //     alert("Registrazione avvenuta con successo!");
-  //     navigate('/login');
-  //   } catch(err) {
-  //     console.error("Errore nella registrazione", err.response?.data || err.message);
-  //   }
-  // }
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8 mt-36">
@@ -64,21 +54,21 @@ export default function Register() {
         <form onSubmit={handleSubmit} className="flex flex-col gap-5">
           <div className="flex flex-col sm:flex-row gap-4 justify-between">
             <div className="flex flex-col">
-              <label htmlFor="firstName">First Name</label>
+              <label htmlFor="nome">First Name</label>
               <input className="w-full px-4 py-2 rounded bg-white dark:bg-gray-800 text-black dark:text-white border border-gray-700 focus:outline-none focus:border-green-500"
                 type="text"
-                id="firstName"
-                name="firstName"
+                id="nome"
+                name="nome"
                 onChange={handleChange}
                 required
               />
             </div>
             <div className="flex flex-col ">
-              <label htmlFor="lastName">Last Name</label>
+              <label htmlFor="cognome">Last Name</label>
               <input className="w-full px-4 py-2 rounded bg-white dark:bg-gray-800 text-black dark:text-white border border-gray-700 focus:outline-none focus:border-green-500" 
                 type="text"
-                id="lastName"
-                name="lastName"
+                id="cognome"
+                name="cognome"
                 onChange={handleChange}
                 required
               />
@@ -108,11 +98,11 @@ export default function Register() {
           </div>
           <div className="flex flex-col  gap-4">
             <div className="flex flex-col w-full">
-              <label htmlFor="dateOfBirth">Date of Birth</label>
+              <label htmlFor="dataDiNascita">Date of Birth</label>
               <input className="px-4 py-2 rounded bg-white dark:bg-gray-800 text-black dark:text-white border border-gray-700 focus:outline-none focus:border-green-500"
                 type="date"
-                id="dateOfBirth"
-                name="dateOfBirth"
+                id="dataDiNascita"
+                name="dataDiNascita"
                 onChange={handleChange}
                 required
               />
@@ -123,8 +113,7 @@ export default function Register() {
                 type="file"
                 id="avatar"
                 name="avatar"
-                onChange={handleChange}
-                required
+                onChange={handleFileChange}
               />
             </div>
           </div>
