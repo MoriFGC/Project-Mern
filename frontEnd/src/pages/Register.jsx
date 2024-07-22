@@ -26,6 +26,7 @@ export default function Register() {
     e.preventDefault(); // Previene il comportamento predefinito del form di ricaricare la pagina
     try {
       await registerUser(formData); // Chiama la funzione registerUser con i dati del form
+      console.log(formData);
       alert("Registrazione avvenuta con successo!"); // Mostra un messaggio di successo
       navigate("/login"); // Naviga alla pagina di login dopo la registrazione
     } catch (error) {
