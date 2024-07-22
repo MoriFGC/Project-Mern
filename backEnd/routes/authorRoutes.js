@@ -83,44 +83,44 @@ router.post('/', async (req,res) => {
 });
 */
 
-// // NEW! POST /authors: crea un nuovo autore
-// router.post("/", async (req, res) => {
-//     try {
-//       // Crea una nuova istanza di Author con i dati dalla richiesta
-//       const author = new Authors(req.body);
-  
-//       // La password verrà automaticamente hashata grazie al middleware pre-save
-//       // che abbiamo aggiunto nello schema Author
-  
-//       // Salva il nuovo autore nel database
-//       const newAuthor = await author.save();
-  
-//       // Rimuovi la password dalla risposta per sicurezza
-//       const authorResponse = newAuthor.toObject();
-//       delete authorResponse.password;
-  
-//       // Invia il nuovo autore creato come risposta JSON con status 201 (Created)
-//       res.status(201).json(authorResponse);
-//     } catch (err) {
-//       // In caso di errore (es. validazione fallita), invia una risposta di errore
-//       res.status(400).json({ message: err.message });
-//     }
-//   });
-
-  router.post("/", async (req, res) => {
-    console.log("Received registration request:", req.body);
+// NEW! POST /authors: crea un nuovo autore
+router.post("/", async (req, res) => {
     try {
+      // Crea una nuova istanza di Author con i dati dalla richiesta
       const author = new Authors(req.body);
+  
+      // La password verrà automaticamente hashata grazie al middleware pre-save
+      // che abbiamo aggiunto nello schema Author
+  
+      // Salva il nuovo autore nel database
       const newAuthor = await author.save();
-      console.log("New author saved:", newAuthor);
+  
+      // Rimuovi la password dalla risposta per sicurezza
       const authorResponse = newAuthor.toObject();
       delete authorResponse.password;
+  
+      // Invia il nuovo autore creato come risposta JSON con status 201 (Created)
       res.status(201).json(authorResponse);
     } catch (err) {
-      console.error("Error during registration:", err);
+      // In caso di errore (es. validazione fallita), invia una risposta di errore
       res.status(400).json({ message: err.message });
     }
   });
+
+//   router.post("/", async (req, res) => {
+//     console.log("Received registration request:", req.body);
+//     try {
+//       const author = new Authors(req.body);
+//       const newAuthor = await author.save();
+//       console.log("New author saved:", newAuthor);
+//       const authorResponse = newAuthor.toObject();
+//       delete authorResponse.password;
+//       res.status(201).json(authorResponse);
+//     } catch (err) {
+//       console.error("Error during registration:", err);
+//       res.status(400).json({ message: err.message });
+//     }
+//   });
 
 router.put('/:id', async (req,res) => {
     try{
