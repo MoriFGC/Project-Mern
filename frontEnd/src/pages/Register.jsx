@@ -9,55 +9,35 @@ export default function Register() {
     email: "",
     password: "",
     dataDiNascita: "",
-    avatar: null,
+    avatar: '',
   });
 
   const navigate = useNavigate();
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-    console.log(formData);
-  };
 
   const handleFileChange = (e) => {
     setFormData({ ...formData, avatar: e.target.files[0] });
     console.log(formData);
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const formDataToSend = new FormData();
-      Object.keys(formData).forEach(key => {
-        if (formData[key]) {
-          if (key === 'avatar' && formData[key] instanceof File) {
-            formDataToSend.append(key, formData[key], formData[key].name);
-          } else {
-            formDataToSend.append(key, formData[key]);
-          }
-          console.log(`Appending to formDataToSend: ${key}:`, formData[key]);
-        }
-      });
-      
-      console.log("FormData to be sent:", Object.fromEntries(formDataToSend));
-      
-      await registerUser(formDataToSend);
-      alert("Registrazione avvenuta con successo!");
-      navigate("/login");
-    } catch (error) {
-      console.error("Errore durante la registrazione:", error);
-      if (error.response) {
-        console.error("Response data:", error.response.data);
-        console.error("Response status:", error.response.status);
-        console.error("Response headers:", error.response.headers);
-      }
-      alert("Errore durante la registrazione. Riprova.");
-      if (!formData.nome.trim()) {
-        alert("Il campo Nome è obbligatorio");
-        return;
-      }
-    }
-  };
+ // Gestore per aggiornare lo stato quando i campi del form cambiano
+ const handleChange = (e) => {
+  // Aggiorna il campo corrispondente nello stato con il valore attuale dell'input
+  setFormData({ ...formData, [e.target.name]: e.target.value });
+};
+
+// Gestore per la sottomissione del form
+const handleSubmit = async (e) => {
+  e.preventDefault(); // Previene il comportamento predefinito del form di ricaricare la pagina
+  try {
+    await registerUser(formData); // Chiama la funzione registerUser con i dati del form
+    alert("Registrazione avvenuta con successo!"); // Mostra un messaggio di successo
+    navigate("/login"); // Naviga alla pagina di login dopo la registrazione
+  } catch (error) {
+    console.error("Errore durante la registrazione:", error); // Logga l'errore in console
+    alert("Errore durante la registrazione. Riprova."); // Mostra un messaggio di errore
+  }
+};
 
 
 
@@ -127,7 +107,7 @@ export default function Register() {
                 type="file"
                 id="avatar"
                 name="avatar"
-                onChange={handleFileChange}
+                onChange={handleChange}
               />
             </div>
           </div>
