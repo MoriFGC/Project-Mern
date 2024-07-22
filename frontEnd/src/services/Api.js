@@ -45,7 +45,12 @@ export const getComment = (postId, commentId) => api.get(`/blogPosts/${postId}/c
 export const updateComment = (postId, commentId, commentData) => api.put(`/blogPosts/${postId}/comments/${commentId}`, commentData).then(response => response.data);
 export const deleteComment = (postId, commentId) => api.delete(`/blogPosts/${postId}/comments/${commentId}`).then(response => response.data);
 
-export const registerUser = (userData) => api.post("/authors", userData);
+export const registerUser = (userData) => {
+  console.log("Dati inviati al server:", userData);
+  return api.post("/authors", userData, {
+    headers: { 'Content-Type': 'multipart/form-data' }
+  });
+};
 
 export const loginUser = async (credentials) => {
   try {
