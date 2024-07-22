@@ -35,6 +35,7 @@ export default function Register() {
           } else {
             formDataToSend.append(key, formData[key]);
           }
+          console.log(`Appending to formDataToSend: ${key}:`, formData[key]);
         }
       });
       
