@@ -106,19 +106,40 @@ router.get('/github/callback',
   handleAuthCallback
 );
 
-// Funzione helper per gestire il callback di autenticazione
+// // Funzione helper per gestire il callback di autenticazione
+// async function handleAuthCallback(req, res) {
+//   try {
+//     // Genera un JWT (JSON Web Token) per l'utente autenticato
+//     // req.user contiene i dati dell'utente forniti da Passport dopo l'autenticazione
+//     const token = await generateJWT({ id: req.user._id });
+
+//     // Reindirizza l'utente al frontend, passando il token come parametro URL
+//     res.redirect(`${FRONTEND_URL}/login?token=${token}`);
+//   } catch (error) {
+//     // Se c'è un errore nella generazione del token, lo logghiamo
+//     console.error('Errore nella generazione del token:', error);
+//     // E reindirizziamo l'utente alla pagina di login con un messaggio di errore
+//     res.redirect(`${FRONTEND_URL}/login?error=auth_failed`);
+//   }
+// }
+
 async function handleAuthCallback(req, res) {
   try {
-    // Genera un JWT (JSON Web Token) per l'utente autenticato
-    // req.user contiene i dati dell'utente forniti da Passport dopo l'autenticazione
     const token = await generateJWT({ id: req.user._id });
-
-    // Reindirizza l'utente al frontend, passando il token come parametro URL
-    res.redirect(`${FRONTEND_URL}/login?token=${token}`);
+    const userData = {
+      id: req.user._id,
+      nome: req.user.nome,
+      cognome: req.user.cognome,
+      email: req.user.email,
+      avatar: req.user.avatar
+    };
+    
+    // Codifica i dati dell'utente per passarli in modo sicuro nell'URL
+    const userDataParam = encodeURIComponent(JSON.stringify(userData));
+    
+    res.redirect(`${FRONTEND_URL}/login?token=${token}&userData=${userDataParam}`);
   } catch (error) {
-    // Se c'è un errore nella generazione del token, lo logghiamo
     console.error('Errore nella generazione del token:', error);
-    // E reindirizziamo l'utente alla pagina di login con un messaggio di errore
     res.redirect(`${FRONTEND_URL}/login?error=auth_failed`);
   }
 }

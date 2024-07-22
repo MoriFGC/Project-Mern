@@ -23,13 +23,6 @@ export default function Login() {
   }, [navigate]);
 
   useEffect(() => {
-    const storedUserData = JSON.parse(localStorage.getItem("userData"));
-    if (storedUserData) {
-      setFormData(storedUserData);
-    }
-  }, []);
-
-  useEffect(() => {
     const params = new URLSearchParams(location.search);
     const token = params.get("token");
     const userDataParam = params.get("userData");

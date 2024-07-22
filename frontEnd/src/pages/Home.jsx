@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from "react-router-dom";
-import { getPosts, getAuthorEmail, getMe } from '../services/Api';
+import { getPosts } from '../services/Api';
 import Post from '../components/Post';
 import Pagination from '../components/Pagination';
 
@@ -11,7 +11,6 @@ export default function Home() {
     const [searchTitle, setSearchTitle] = useState('');
     const [isLoading, setIsLoading] = useState(true);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const [author, setAuthor] = useState(null);
     const [userData, setUserData] = useState(null);
 
     const navigate = useNavigate();
@@ -93,7 +92,7 @@ export default function Home() {
         <main className='px-12 mb-32 mt-40 min-h-screen max-w-7xl mx-auto relative'>
             <div className='flex flex-col md:flex-row justify-between'>
                 <h1 className='text-[30px] font-bold font-mono text-black dark:text-white'>
-                    Welcome To My Blog, <span className='text-verde'>{author ? `${author.nome} ${author.cognome}` : 'User'}</span>
+                    Welcome To My Blog, <span className='text-verde'>{userData ? `${userData.nome} ${userData.cognome}` : 'User'}</span>
                 </h1>
                 <input 
                     type="search" 
