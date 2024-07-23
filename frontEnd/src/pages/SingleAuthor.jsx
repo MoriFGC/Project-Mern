@@ -1,17 +1,19 @@
 import { Link, useParams } from "react-router-dom";
-import { getAuthorId, getPostAuthor } from "../services/Api";
+import { getAuthorId, getPostAuthor, getMe, updateAuthor } from "../services/Api";
 import { useEffect, useState } from "react";
 import Post from "../components/Post";
 import img from '../assets/user.svg'
 import gif from '../assets/404.gif';
-"use client";
-
 import { Spinner } from "flowbite-react";
+import { FaPencilAlt } from 'react-icons/fa';
+import { UpdateModalProfile } from "../components/UpdateModalProfile";
 
 export default function SingleAuthor() {
   const [author, setAuthor] = useState(null);
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [currentUser, setCurrentUser] = useState(null);
+  const [showUpdateModal, setShowUpdateModal] = useState(false);
   const { id } = useParams();
 
   useEffect(() => {
@@ -20,11 +22,15 @@ export default function SingleAuthor() {
         setLoading(true);
         const authorResponse = await getAuthorId(id);
         setAuthor(authorResponse.data);
+        console.log(author);
         
         if (authorResponse.data && authorResponse.data.email) {
           const postsResponse = await getPostAuthor(authorResponse.data.email);
           setPosts(postsResponse.data);
         }
+
+        const currentUserData = await getMe();
+        setCurrentUser(currentUserData);
       } catch (error) {
         console.error("Error fetching data:", error);
       } finally {
@@ -34,6 +40,16 @@ export default function SingleAuthor() {
 
     fetchData();
   }, [id]);
+
+  const handleUpdate = async (updatedData) => {
+    try {
+      const response = await updateAuthor(updatedData, id);
+      setAuthor(response.data);
+      setShowUpdateModal(false);
+    } catch (error) {
+      console.error("Error updating author:", error);
+    }
+  };
 
   if (loading) return <div className="mt-52 min-h-screen flex flex-col items-center justify-center gap-5 text-2xl">
     <Spinner color="success" aria-label="Success spinner example" className="w-20 h-20"/>
@@ -45,7 +61,7 @@ export default function SingleAuthor() {
 
   return (
     <div className="flex flex-col items-center min-h-screen mb-10 text-black dark:text-white max-w-7xl mx-auto mt-40">
-      <div className="drop-shadow-2xl  mx-auto flex flex-col justify-center items-center gap-4 text-center text-black dark:text-white rounded-full my-5">
+      <div className="drop-shadow-2xl mx-auto flex flex-col justify-center items-center gap-4 text-center text-black dark:text-white rounded-full my-5 relative">
         <div className="border-2 border-verde h-[200px] w-[200px] rounded-full ms-4">
           {author.avatar ? (
             <img
@@ -57,6 +73,14 @@ export default function SingleAuthor() {
             <img className="rounded-full" src={img} alt={author.nome} />
           )}
         </div>
+        {currentUser && currentUser._id === author._id && (
+          <button 
+            onClick={() => setShowUpdateModal(true)}
+            className="text-black dark:text-white absolute top-0 right-0 p-2 rounded-full border-2 border-transparent hover:border-verde transition-colors duration-300"
+          >
+            <FaPencilAlt />
+          </button>
+        )}
         <div>
           <h2 className="text-2xl font-semibold font-mono">
             {author.nome} {author.cognome}
@@ -77,6 +101,13 @@ export default function SingleAuthor() {
           <p className="text-xl font-mono">No posts yet</p>
           {author.email && <Link to="/create" className="border-2 border-solid border-transparent text-xl font-bold text-white bg-black/30 hover:dark:bg-white/30 hover:bg-verde/30 hover:border-verde rounded-xl p-[5px] md:p-[10px] md:px-4 font-mono mt-5 transition-all duration-300 ease-in-out"><button>+ Create your first post</button></Link>}
         </div>
+      )}
+      {showUpdateModal && (
+        <UpdateModalProfile 
+          author={author}
+          onClose={() => setShowUpdateModal(false)}
+          onUpdate={handleUpdate}
+        />
       )}
     </div>
   );

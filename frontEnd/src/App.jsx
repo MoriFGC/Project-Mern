@@ -13,19 +13,36 @@ import { useState, useEffect } from 'react'
 import { FlowbiteFT } from './components/FlowbiteFooter'
 
 function App() {
-  const [darkMode, setDarkMode] = useState(() => localStorage.getItem('darkMode') === 'true');
+  const [darkMode, setDarkMode] = useState(() => {
+    // Controlla prima se c'è una preferenza salvata nel localStorage
+    const savedPreference = localStorage.getItem('darkMode');
+    if (savedPreference !== null) {
+      return savedPreference === 'true';
+    }
+    // Se non c'è una preferenza salvata, usa la preferenza del sistema
+    return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+  });
 
   useEffect(() => {
-    localStorage.setItem('darkMode', darkMode);
+    localStorage.setItem('darkMode', darkMode.toString());
     if (darkMode) {
       document.documentElement.classList.add('dark');
     } else {
       document.documentElement.classList.remove('dark');
     }
+
+    // Aggiungi un listener per i cambiamenti della preferenza di sistema
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    const handleChange = (e) => {
+      setDarkMode(e.matches);
+    };
+    mediaQuery.addEventListener('change', handleChange);
+
+    // Rimuovi il listener quando il componente viene smontato
+    return () => mediaQuery.removeEventListener('change', handleChange);
   }, [darkMode]);
 
   const toggleDarkMode = () => setDarkMode(prev => !prev);
-
 
   return (
     <Flowbite theme={{ dark: darkMode }}>
