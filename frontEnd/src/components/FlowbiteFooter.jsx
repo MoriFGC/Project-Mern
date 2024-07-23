@@ -11,12 +11,12 @@ import { DarkThemeToggle } from 'flowbite-react'
 
 export function FlowbiteFT({ darkMode, toggleDarkMode }) {
   return (
-    <Footer container className="dark:bg-black transition-all duration-300 ease-in-out">
+    <Footer container className="dark:bg-footer transition-all duration-300 ease-in-out border-t border-gray-200 dark:border-t-white/30 rounded-none h-80">
       <div className="max-w-7xl mx-auto w-full ">
         <div className="grid w-full justify-between sm:flex sm:justify-between md:flex md:grid-cols-1">          <div>
             <Link to="/">
               <Footer.Brand
-                className="md:w-[150px]" src={darkMode ? logoDark : logoWhite} alt="Strive logo"
+                className="md:w-[150px] my-5 md:m-0" src={darkMode ? logoDark : logoWhite} alt="Strive logo"
               />
             </Link>
           </div>
