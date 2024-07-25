@@ -208,9 +208,9 @@ export default function Post() {
         {/* ----------------------------- bottone per editare e delete ---------------------------- */}
         {userData?.email === post.author && (
           <Menu as="div" className="absolute right-0 top-7 ">
-            <MenuButton className=' rounded-s-full w-10 bg-black/30 border border-transparent hover:border-white/30 transition duration-300 ease-in-out'>
+            <MenuButton className=' rounded-s-full w-10 bg-white/30 dark:bg-black/30 border-2 border-transparent hover:border-y-black/50  hover:dark:border-y-white/30 hover:border-s-black/50  hover:dark:border-s-white/30 border- transition duration-300 ease-in-out'>
               <EllipsisVerticalIcon
-                className="w-8 h-8 border-2 border-transparent rounded-full "
+                className="w-8 h-8"
                 aria-hidden="true"
               />
             </MenuButton>
