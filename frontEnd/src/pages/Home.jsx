@@ -5,6 +5,7 @@ import Post from '../components/Post';
 import Pagination from '../components/Pagination';
 
 export default function Home() {
+    // Variabili di stato per gestire la paginazione, i post, la ricerca, lo stato di caricamento, lo stato di login, le informazioni dell'autore e i dati dell'utente
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const [posts, setPosts] = useState([]);
@@ -14,60 +15,67 @@ export default function Home() {
     const [author, setAuthor] = useState(null);
     const [userData, setUserData] = useState(null);
 
+    // Hook per navigare programmaticamente
     const navigate = useNavigate();
 
+    // Effetto per controllare lo stato di login al montaggio del componente e quando cambia localStorage
     useEffect(() => {
         const checkLoginStatus = () => {
           const token = localStorage.getItem("token");
           const storedUserData = JSON.parse(localStorage.getItem("userData"));
-          setIsLoggedIn(!!token);
-          setUserData(storedUserData);
+          setIsLoggedIn(!!token); // Imposta lo stato di login in base alla presenza del token
+          setUserData(storedUserData); // Imposta i dati dell'utente da localStorage
         };
     
         checkLoginStatus();
-        window.addEventListener("storage", checkLoginStatus);
+        window.addEventListener("storage", checkLoginStatus); // Ascolta i cambiamenti di storage
     
         return () => {
-          window.removeEventListener("storage", checkLoginStatus);
+          window.removeEventListener("storage", checkLoginStatus); // Rimuove il listener al dismontaggio
         };
     }, []);
     
+    // Funzione per recuperare i post in base alla pagina corrente e al titolo di ricerca
     const fetchPosts = async () => {
         try {
-            setIsLoading(true);
-            const response = await getPosts(currentPage, searchTitle);
-            setPosts(response.data.posts);
-            setTotalPages(response.data.totalPages);
+            setIsLoading(true); // Imposta lo stato di caricamento a true
+            const response = await getPosts(currentPage, searchTitle); // Recupera i post dall'API
+            setPosts(response.data.posts); // Imposta lo stato dei post con i dati recuperati
+            setTotalPages(response.data.totalPages); // Imposta lo stato delle pagine totali con i dati recuperati
         } catch(err) {
-            console.error('Errore nella richiesta dei post', err);
+            console.error('Errore nella richiesta dei post', err); // Logga l'errore se la richiesta fallisce
         } finally {
-            setIsLoading(false);
+            setIsLoading(false); // Imposta lo stato di caricamento a false
         }
     }
 
+    // Funzione per recuperare le informazioni dell'autore in base all'email dell'utente
     const fetchAuthor = async () => {
         if (userData && userData.email) {
             try {
-                const response = await getAuthorEmail(userData.email);
+                const response = await getAuthorEmail(userData.email); // Recupera le informazioni dell'autore dall'API
                 if (response && response.data) {
-                    setAuthor(response.data);
+                    setAuthor(response.data); // Imposta lo stato dell'autore con i dati recuperati
                 } else {
-                    console.error("Dati dell'autore non validi");
+                    console.error("Dati dell'autore non validi"); // Logga l'errore se i dati sono invalidi
                 }
             } catch (error) {
-                console.error("Errore nella richiesta dell'autore", error);
+                console.error("Errore nella richiesta dell'autore", error); // Logga l'errore se la richiesta fallisce
             }
         }
     };
 
+    // Effetto per recuperare le informazioni dell'autore quando i dati dell'utente cambiano
     useEffect(() => {
         fetchAuthor();
     }, [userData]);
 
+    // Effetto per recuperare i post quando la pagina corrente o il titolo di ricerca cambiano
     useEffect(() => {
         fetchPosts();
     }, [currentPage, searchTitle]);
 
+    // Reindirizza alla pagina di login se non si è loggati
     if (!isLoggedIn) {
         navigate("/login");
         return null;

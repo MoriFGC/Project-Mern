@@ -73,6 +73,7 @@ export default function SingleAuthor() {
             <img className="rounded-full" src={img} alt={author.nome} />
           )}
         </div>
+        {/* se l'utente loggato è sul suo profilo puù modificarlo, con google e github devo ancora implementarlo */}
         {currentUser && currentUser._id === author._id && (
           <button 
             onClick={() => setShowUpdateModal(true)}
@@ -102,6 +103,7 @@ export default function SingleAuthor() {
           {author.email && <Link to="/create" className="border-2 border-solid border-transparent text-xl font-bold text-white bg-black/30 hover:dark:bg-white/30 hover:bg-verde/30 hover:border-verde rounded-xl p-[5px] md:p-[10px] md:px-4 font-mono mt-5 transition-all duration-300 ease-in-out"><button>+ Create your first post</button></Link>}
         </div>
       )}
+      {/* se clicco il bottone con la penna dentro mi apre la modale per modificare l'utente */}
       {showUpdateModal && (
         <UpdateModalProfile 
           author={author}

@@ -28,26 +28,26 @@ import { Spinner } from "flowbite-react";
 
 export default function Post() {
   const { id } = useParams();
-  const [post, setPost] = useState(null); //post
-  const [isEditing, setIsEditing] = useState(false);
-  const [editPost, setEditPost] = useState({});
-  const [editingCommentId, setEditingCommentId] = useState(null);
-  const [editCommentContent, setEditCommentContent] = useState("");
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [author, setAuthor] = useState({});
-  const [userData, setUserData] = useState(null);
-  const [comments, setComments] = useState([]);
-  const [newComment, setNewComment] = useState("");
-  const [expandedComments, setExpandedComments] = useState({});
-  const [isLoading, setIsLoading] = useState(true);
-  //console.log(userData);
+  const [post, setPost] = useState(null); // Stato per il post
+  const [isEditing, setIsEditing] = useState(false); // Stato per la modalità di modifica del post
+  const [editPost, setEditPost] = useState({}); // Stato per il post in modifica
+  const [editingCommentId, setEditingCommentId] = useState(null); // Stato per l'ID del commento in modifica
+  const [editCommentContent, setEditCommentContent] = useState(""); // Stato per il contenuto del commento in modifica
+  const [showDeleteModal, setShowDeleteModal] = useState(false); // Stato per mostrare/nascondere il modal di eliminazione
+  const [author, setAuthor] = useState({}); // Stato per l'autore del post
+  const [userData, setUserData] = useState(null); // Stato per i dati dell'utente loggato
+  const [comments, setComments] = useState([]); // Stato per i commenti del post
+  const [newComment, setNewComment] = useState(""); // Stato per il nuovo commento
+  const [expandedComments, setExpandedComments] = useState({}); // Stato per gestire l'espansione dei commenti
+  const [isLoading, setIsLoading] = useState(true); // Stato per gestire il caricamento
 
   const navigate = useNavigate();
+
   //--------------------------------------- fetch user data -----------------------------
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const userData = await getMe();
+        const userData = await getMe(); // Recupera i dati dell'utente loggato
         setUserData(userData);
       } catch (error) {
         console.error("Errore nel recupero dei dati utente:", error);
@@ -60,15 +60,16 @@ export default function Post() {
 
   useEffect(() => {
     if (post) {
-      fetchAuthor();
+      fetchAuthor(); // Recupera i dati dell'autore del post
     }
   }, [post]);
+
   //------------------------ fetch post, commenti e autori ----------------------
   const fetchPostAndComments = async () => {
     try {
-      const postResponse = await getPost(id);
+      const postResponse = await getPost(id); // Recupera il post
       setPost(postResponse.data);
-      const commentsResponse = await getComments(id);
+      const commentsResponse = await getComments(id); // Recupera i commenti del post
       setComments(commentsResponse);
     } catch (err) {
       console.error("Errore nella richiesta del post o dei commenti", err);
@@ -77,15 +78,16 @@ export default function Post() {
 
   const fetchAuthor = async () => {
     try {
-      const response = await getAuthorEmail(post.author);
+      const response = await getAuthorEmail(post.author); // Recupera l'email dell'autore del post
       setAuthor(response.data);
     } catch (error) {
       console.error("Errore nella richiesta dell'autore", error);
     }
   };
+
   //-------------- delete, post e update dei commenti -----------------------
   const handleCommentChange = (e) => {
-    setNewComment(e.target.value);
+    setNewComment(e.target.value); // Aggiorna lo stato del nuovo commento
   };
 
   const handleCommentSubmit = async (e) => {
@@ -101,10 +103,10 @@ export default function Post() {
         content: newComment,
         avatar: userData.avatar,
       };
-      await addComment(id, commentData);
-      const commentsResponse = await getComments(id);
+      await addComment(id, commentData); // Aggiunge un nuovo commento
+      const commentsResponse = await getComments(id); // Recupera i commenti aggiornati
       setComments(commentsResponse);
-      setNewComment("");
+      setNewComment(""); // Resetta il campo del nuovo commento
     } catch (error) {
       console.error("Errore nell'aggiunta del commento:", error);
     }
@@ -112,7 +114,7 @@ export default function Post() {
 
   const handleCommentDelete = async (commentId) => {
     try {
-      await deleteComment(id, commentId);
+      await deleteComment(id, commentId); // Elimina un commento
       setComments((prevComments) =>
         prevComments.filter((comment) => comment._id !== commentId)
       );
@@ -127,7 +129,7 @@ export default function Post() {
     try {
       await updateComment(id, editingCommentId, {
         content: editCommentContent,
-      });
+      }); // Aggiorna un commento
       setComments((prevComments) =>
         prevComments.map((comment) =>
           comment._id === editingCommentId
@@ -135,16 +137,17 @@ export default function Post() {
             : comment
         )
       );
-      setEditingCommentId(null);
-      setEditCommentContent("");
+      setEditingCommentId(null); // Resetta lo stato del commento in modifica
+      setEditCommentContent(""); // Resetta il contenuto del commento in modifica
     } catch (error) {
       console.error("Errore nell'aggiornamento del commento:", error);
     }
   };
+
   //--------------------------------------- delete e update dei post --------------------------
   const handleDelete = async () => {
     try {
-      await deletePost(id);
+      await deletePost(id); // Elimina il post
       navigate("/");
     } catch (error) {
       console.error("Error with the delete function", error);
@@ -152,19 +155,19 @@ export default function Post() {
   };
 
   const deleteCheck = () => {
-    setShowDeleteModal(true);
+    setShowDeleteModal(true); // Mostra il modal di eliminazione
   };
 
   const closeDeleteModal = () => {
-    setShowDeleteModal(false);
+    setShowDeleteModal(false); // Nasconde il modal di eliminazione
   };
 
   const handleUpdate = async (e) => {
     e.preventDefault();
     try {
-      await updatePost(editPost, id);
+      await updatePost(editPost, id); // Aggiorna il post
       setPost((prevPost) => ({ ...prevPost, ...editPost }));
-      setIsEditing(false);
+      setIsEditing(false); // Disattiva la modalità di modifica
     } catch (error) {
       console.error("Error with the update function", error);
     }
@@ -204,10 +207,10 @@ export default function Post() {
         {/* fine post */}
         {/* ----------------------------- bottone per editare e delete ---------------------------- */}
         {userData?.email === post.author && (
-          <Menu as="div" className="absolute right-2 top-7 ">
-            <MenuButton>
+          <Menu as="div" className="absolute right-0 top-7 ">
+            <MenuButton className=' rounded-s-full w-10 bg-black/30 border border-transparent hover:border-white/30 transition duration-300 ease-in-out'>
               <EllipsisVerticalIcon
-                className="w-8 h-8 border-2 border-transparent rounded-full hover:border-verde/50 transition duration-300 ease-in-out"
+                className="w-8 h-8 border-2 border-transparent rounded-full "
                 aria-hidden="true"
               />
             </MenuButton>
@@ -230,7 +233,7 @@ export default function Post() {
                             ? "bg-verde text-white"
                             : "text-black dark:text-white"
                         } group flex rounded-md items-center w-full px-2 py-2 text-sm`}
-                        onClick={() => setEditPost(post)}
+                        onClick={() => setEditPost(post)} // Imposta il post in modifica
                       >
                         Update
                       </button>
@@ -244,7 +247,7 @@ export default function Post() {
                             ? "bg-red-500 text-white"
                             : "text-black dark:text-white"
                         } group flex rounded-md items-center w-full px-2 py-2 text-sm`}
-                        onClick={deleteCheck}
+                        onClick={deleteCheck} // Mostra il modal di eliminazione
                       >
                         Delete
                       </button>
@@ -259,7 +262,7 @@ export default function Post() {
         <div className="w-full mt-20">
           <form
             className="flex flex-col items-center gap-1 p-3 text-black"
-            onSubmit={handleCommentSubmit}
+            onSubmit={handleCommentSubmit} // Gestisce l'invio del nuovo commento
           >
             <textarea
               name="content"
@@ -338,8 +341,8 @@ export default function Post() {
                                           : "text-black dark:text-white"
                                       } group flex rounded-md items-center w-full px-2 py-2 text-sm`}
                                       onClick={() => {
-                                        setEditingCommentId(comment._id);
-                                        setEditCommentContent(comment.content);
+                                        setEditingCommentId(comment._id); // Imposta il commento in modifica
+                                        setEditCommentContent(comment.content); // Imposta il contenuto del commento in modifica
                                       }}
                                     >
                                       Update
@@ -355,7 +358,7 @@ export default function Post() {
                                           : "text-black dark:text-white"
                                       } group flex rounded-md items-center w-full px-2 py-2 text-sm`}
                                       onClick={() =>
-                                        handleCommentDelete(comment._id)
+                                        handleCommentDelete(comment._id) // Elimina il commento
                                       }
                                     >
                                       Delete
@@ -386,8 +389,8 @@ export default function Post() {
                         </button>
                         <button
                           onClick={() => {
-                            setEditingCommentId(null);
-                            setEditCommentContent("");
+                            setEditingCommentId(null); // Resetta lo stato del commento in modifica
+                            setEditCommentContent(""); // Resetta il contenuto del commento in modifica
                           }}
                           className="bg-gray-500 text-white p-2 mt-2 ml-2 rounded"
                         >
@@ -407,7 +410,7 @@ export default function Post() {
                         </p>
                         {comment.content.length > 100 && (
                           <button
-                            onClick={() => toggleCommentExpansion(comment._id)}
+                            onClick={() => toggleCommentExpansion(comment._id)} // Gestisce l'espansione/compressione del commento
                             className="text-verde hover:underline mt-1 transition-all duration-300"
                           >
                             {expandedComments[comment._id]
@@ -428,17 +431,17 @@ export default function Post() {
       </div>
 
       <DeleteCheck
-        handleDelete={handleDelete}
+        handleDelete={handleDelete} // Passa la funzione di eliminazione al componente DeleteCheck
         id={id}
-        isOpen={showDeleteModal}
-        onClose={closeDeleteModal}
+        isOpen={showDeleteModal} // Stato per mostrare/nascondere il modal di eliminazione
+        onClose={closeDeleteModal} // Funzione per chiudere il modal di eliminazione
       />
       {editPost && editPost._id === post._id && (
         <UpdateModalPost
-          editPost={editPost}
-          setEditPost={setEditPost}
-          setIsEditing={setIsEditing}
-          handleUpdate={handleUpdate}
+          editPost={editPost} // Passa il post in modifica al componente UpdateModalPost
+          setEditPost={setEditPost} // Funzione per aggiornare il post in modifica
+          setIsEditing={setIsEditing} // Funzione per gestire la modalità di modifica
+          handleUpdate={handleUpdate} // Funzione per gestire l'aggiornamento del post
         />
       )}
       <Link

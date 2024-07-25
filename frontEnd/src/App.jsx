@@ -13,16 +13,17 @@ import { useState, useEffect } from 'react'
 import { FlowbiteFT } from './components/FlowbiteFooter'
 
 function App() {
+  // Stato per gestire la modalità scura
   const [darkMode, setDarkMode] = useState(() => {
-    // Controlla prima se c'è una preferenza salvata nel localStorage
+    // Controlla se c'è una preferenza salvata in localStorage, altrimenti usa la preferenza di sistema
     const savedPreference = localStorage.getItem('darkMode');
     if (savedPreference !== null) {
       return savedPreference === 'true';
     }
-    // Se non c'è una preferenza salvata, usa la preferenza del sistema
     return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
   });
 
+  // Effetto per applicare la modalità scura e salvare la preferenza
   useEffect(() => {
     localStorage.setItem('darkMode', darkMode.toString());
     if (darkMode) {
@@ -31,17 +32,18 @@ function App() {
       document.documentElement.classList.remove('dark');
     }
 
-    // Aggiungi un listener per i cambiamenti della preferenza di sistema
+    // Ascolta i cambiamenti della preferenza di sistema
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
     const handleChange = (e) => {
       setDarkMode(e.matches);
     };
     mediaQuery.addEventListener('change', handleChange);
 
-    // Rimuovi il listener quando il componente viene smontato
+    // Rimuovi l'ascoltatore quando il componente viene smontato
     return () => mediaQuery.removeEventListener('change', handleChange);
   }, [darkMode]);
 
+  // Funzione per attivare/disattivare la modalità scura
   const toggleDarkMode = () => setDarkMode(prev => !prev);
 
   return (
